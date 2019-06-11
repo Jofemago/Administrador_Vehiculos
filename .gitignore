@@ -102,3 +102,10 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+
+#las que yo pongo
+
+.ipynb_checkpoints
+excel
+*.db

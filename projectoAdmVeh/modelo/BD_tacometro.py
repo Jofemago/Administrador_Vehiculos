@@ -4,21 +4,18 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-
-#from createDatabase import makeEngine
-
-
 Base = declarative_base()
 
-class TipoVehiculo(Base):
+class _Tacometro(Base):
 
-    __tablename__ = "tipoVehiculo"
+    __tablename__ = "Tacometro"
 
     id = Column(Integer, primary_key = True)
-    tipo = Column(String(50))
+    idVehiculo = Column(Integer)#foreing key
+    valorTacometro = Column(Integer)
+    fecha = Column(String(50))
 
 
-
-def makeTableTipoVehiculo(eng):
+def makeTable(eng):
 
     Base.metadata.create_all(bind =eng)

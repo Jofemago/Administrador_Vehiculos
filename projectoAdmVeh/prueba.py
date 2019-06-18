@@ -1,9 +1,24 @@
-from modelo.createDatabase import makeEngine, makeDatabase, makeBase
-from modelo.tipoVehiculo import TipoVehiculo,makeTableTipoVehiculo
+#from modelo.createDatabase import makeEngine, makeDatabase, makeBase
+#from modelo.BD_tipoVehiculo import TipoVehiculo
 from sqlalchemy.orm import sessionmaker
+from modelo.createDatabase import makeEngine
+#from modelo.makeAllTables import create_all
 
+"""
+import BD_tipoVehiculo
+import BD_marcaVehiculo
+import BD_lineaVehiculo
+import BD_combustible
+import BD_vehiculo
+import BD_tacometro
+
+
+
+create_all()
+"""
 
 eng = makeEngine()
+"""
 base = makeBase()
 
 
@@ -13,8 +28,9 @@ base = makeBase()
 
 tipveh = TipoVehiculo(id = 1,tipo = "chevrolet")
 Session = sessionmaker(bind=eng)
-ses = Session() 
+ses = Session()
 
 ses.add(tipveh)
 
 ses.commit()
+"""

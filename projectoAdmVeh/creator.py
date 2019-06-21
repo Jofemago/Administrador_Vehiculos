@@ -34,6 +34,24 @@ class Creator():
         BD_vehiculo.makeTable(self.eng)
         BD_tacometro.makeTable(self.eng)
 
+    def loadTipoMarcaLineaVehiculo(self):
+        clases = []
+        with open("./files/clase.csv") as ins:
+            for line in ins:
+                clases.append(line.replace('\n', ""))
+        clases = clases[1:]
+        
+        for i in range(len(clases)):
+            clases[i] = clases[i].split(",")[1:]
+        print(clases)
+        elementstoUpload = [BD_tipoVehiculo._TipoVehiculo(id = c[0],tipo = c[1]) for c in clases]
+        Session = sessionmaker(bind=self.eng)
+        ses = Session()
+        ses.add_all(elementstoUpload)
+        ses.commit()
+        ses.close()
+
+
 
 #c = Creator()
 #c.makeAllTables()

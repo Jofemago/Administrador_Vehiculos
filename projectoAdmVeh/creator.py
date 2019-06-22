@@ -13,6 +13,11 @@ from modelo import BD_combustible, BD_vehiculo, BD_tacometro
 #from modelo.BD_tipoVehiculo import _TipoVehiculo
 
 
+
+rutaclase = "./files/clase.csv"
+rutamarca = "./files/marca.csv"
+rutalinea = "./files/linea.csv"
+
 class Creator():
     base = makeBase()
 
@@ -35,15 +40,69 @@ class Creator():
         BD_tacometro.makeTable(self.eng)
 
     def loadTipoMarcaLineaVehiculo(self):
+        self.loadTipo()
+        self.loadMarca()
+        self.loadLinea()
+
+
+    def loadLinea(self):
+        
+        lineas = []
+        with open(rutalinea) as ins:
+            for line in ins:
+                lineas.append(line.replace('\n',""))
+        lineas = lineas[1:]
+
+        for i in range(len(lineas)):
+            lineas[i] = lineas[i].split(",")[1:]
+
+        elementstoUpload = [BD_lineaVehiculo._LineaVehiculo(id = l[0], idTipoVehiculo = l[1] , idMarcaVehiculo = l[2] , linea = l[3]) for l in lineas]
+        Session = sessionmaker(bind=self.eng)
+        ses = Session()
+        ses.add_all(elementstoUpload)
+        ses.commit()
+        ses.close()
+
+    def loadCombustible(self):
+        l = [[1,"Gasolina", "galones"],[2, "Diesel", "Galones"],[3, "Gas", "m3"], [4, "Acpm", "galones"]]
+        elementstoUpload = [BD_combustible._Combustible(id = c[0], nombre = c[1], medida = c[2]) for c in l]
+        Session = sessionmaker(bind=self.eng)
+        ses = Session()
+        ses.add_all(elementstoUpload)
+        ses.commit()
+        ses.close()
+
+        
+    def loadMarca(self):
+        
+        marcas = []
+        with open(rutamarca) as ins:
+            for line in ins:
+                marcas.append(line.replace('\n',""))
+        marcas = marcas[1:]
+
+        for i in range(len(marcas)):
+            marcas[i] = marcas[i].split(",")[1:]
+
+        elementstoUpload = [BD_marcaVehiculo._MarcaVehiculo(id = m[0], idTipoVehiculo = m[1], marca = m[2]) for m in marcas]
+        Session = sessionmaker(bind=self.eng)
+        ses = Session()
+        ses.add_all(elementstoUpload)
+        ses.commit()
+        ses.close()
+
+
+
+    def loadTipo(self):
         clases = []
-        with open("./files/clase.csv") as ins:
+        with open(rutaclase) as ins:
             for line in ins:
                 clases.append(line.replace('\n', ""))
         clases = clases[1:]
         
         for i in range(len(clases)):
             clases[i] = clases[i].split(",")[1:]
-        print(clases)
+        #print(clases)
         elementstoUpload = [BD_tipoVehiculo._TipoVehiculo(id = c[0],tipo = c[1]) for c in clases]
         Session = sessionmaker(bind=self.eng)
         ses = Session()

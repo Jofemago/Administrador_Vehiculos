@@ -5,8 +5,8 @@ from creator import Creator
 x = Creator()
 #x.makeDB()
 #x.makeAllTables()
-x.loadTipoMarcaLineaVehiculo()
-
+#x.loadTipoMarcaLineaVehiculo()
+x.loadCombustible()
 #rom negocio.tipovehiculo import TipoVehiculo
 
 

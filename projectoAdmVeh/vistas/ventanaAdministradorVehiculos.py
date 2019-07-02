@@ -4,7 +4,15 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.popup import Popup
 from kivy.lang import Builder
+
+
+#import from another views
 from vistas.anadirVehiculo import AgregarVehiculo
+
+
+#import desde negocio
+from negocio.tipoVehiculo import TipoVehiculo
+
 """ 
 Los botones de vehiculo, Ubicacion y Eliminar los implemento como clases aparte, esto con el objeto de poder obtener la instancia de cada
 btn al presionar uno, ya que desde el kv solo es mandar como parametro a la funcion (self) si el btn es presionado, hay otras formas, 
@@ -94,6 +102,7 @@ class SecondWindow(Screen):
 	#l=[]
 	def __init__(self, **kwargs):
 		super(SecondWindow, self).__init__(**kwargs)
+		#lista de todos los vehiculos
 		Clock.schedule_once(lambda dt:self.scrollVehiculos()) #hago este proceso, porque si trato de usar los self.ids desde el constructor,
 											   #Me dara error, ya que no se han creado todavia, por eso con clock lo que trato es
 											   #retardar el proceso, de esta manera funciona, con la func lambda no tengo que obtener dt.
@@ -120,7 +129,7 @@ class SecondWindow(Screen):
 
 	def scrollVehiculos(self): 
 		# CONSULTA BASE DE DATOS PARA LISTAR TODOS LOS VEHICULOS
-
+		
 		for i in range(5): 
 			#self.l.append(BoxLayout(orientation="horizontal"))
 			#self.ids.contenedorFilas.add_widget(self.l[-1]) #al gridlayout le agrego lo boxlayout necesarios, en cada boxlayout puedo posicionar

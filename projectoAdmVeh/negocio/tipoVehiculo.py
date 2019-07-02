@@ -19,6 +19,11 @@ class TipoVehiculo:
         self.tipo = tipo
 
 
+    def __str__(self):
+
+        return self.tipo
+
+
     def getAllTipos(self):
 
         Session = sessionmaker(bind=self.eng)
@@ -28,12 +33,9 @@ class TipoVehiculo:
             query = ses.query(_TipoVehiculo).all()
         except:
             print("no se puede generar la consulta")
-        
-
-        for i in query:
-            print(i)
-
         ses.close()
+        
+        return [TipoVehiculo( int(i.id), str(i.tipo)) for i in query]
 
         
 

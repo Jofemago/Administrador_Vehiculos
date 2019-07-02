@@ -2,15 +2,27 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 from kivy.uix.boxlayout import BoxLayout
 
+
+#import to negocio
+from negocio.tipoVehiculo import TipoVehiculo
+
+
 class AgregarVehiculo(Screen):
 	def __init__(self, **kwargs):
 		self.register_event_type('on_guardar')
 		super(AgregarVehiculo, self).__init__(**kwargs)
 		Clock.schedule_once(self.valoresSpinner)
 
+
+		#cargo los tipo de vehiculos
+		self.tipos = TipoVehiculo.getAllTipos(TipoVehiculo)
+		self.marca = None
+		self.linea = None
+		
+
 	def valoresSpinner(self,dt):
 		#consulta para traer los vehiculos y anexar en esta lista
-		self.ids.spinner_1.values=['vehiculo1' , 'vehiculo2', 'vehiculo3']
+		self.ids.spinner_1.values=[tipo.tipo for tipo in self.tipos]
 
 	def marcasDeTipoVehiculo(self):
 		self.ids.spinner_2.text="Seleccione la marca"
@@ -35,5 +47,5 @@ class AgregarVehiculo(Screen):
 			self.ids.advertenciaAgregarVehiculo.text="Complete todos los campos."
 			return [False, None]
 		else:
-			#agregar a db
+			#agregar a db el vehiculo
 			return [True, nombreVehiculo] 

@@ -58,7 +58,7 @@ class VerAlarmas(BoxLayout):
 		Clock.schedule_once(lambda dt:self.listarAlarmas())
 
 	def listarAlarmas(self):
-		fichero = open('prueba.txt', 'r')
+		fichero = open('./vistas/prueba.txt', 'r')
  
 		fichero.readline()
 		 

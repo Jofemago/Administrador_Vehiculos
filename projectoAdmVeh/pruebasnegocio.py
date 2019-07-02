@@ -2,4 +2,6 @@ from negocio.tipoVehiculo import TipoVehiculo
 
 
 
-TipoVehiculo.getAllTipos(TipoVehiculo)
+res = TipoVehiculo.getAllTipos(TipoVehiculo)
+for i in res:
+    print(i)

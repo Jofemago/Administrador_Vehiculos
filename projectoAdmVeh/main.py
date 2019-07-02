@@ -23,31 +23,26 @@ class VistasApp(App):
 	def build(self):
 
 		#process to make the database or not, and take the mail or not
-		config = {}
+		creator = Creator()
 
+		config = creator.makeConfigJSON()
 		
-
-		with open(pathjson, "r") as f:
-			config = json.load(f)
-
-		f.close()
 
 		#print("La configuracion\n",config)
 		if not config["init"]:
 			
 
 			#make the database
-			x = Creator()
-			x.makeDB()
-			x.makeAllTables()
-			x.loadTipoMarcaLineaVehiculo()
-			x.loadCombustible()
+			
+			creator.makeDB()
+			creator.makeAllTables()
+			creator.loadTipoMarcaLineaVehiculo()
+			creator.loadCombustible()
 
 			print("____________________________Creacion completa___________________________________")
 			config["init"] = True
-			with open(pathjson, "w+") as filejson:
-				json.dump(config , filejson , indent= 4)
-			filejson.close()
+			
+			creator.writeConfigJson(config)
 			k=Builder.load_file("vistas.kv")
 
 

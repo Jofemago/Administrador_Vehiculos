@@ -4,6 +4,10 @@ from kivy.uix.popup import Popup
 from kivy.properties import StringProperty
 from kivy.lang import Builder
 
+from db.creator import Creator
+
+
+
 Builder.load_string("""
 #Si meto el popup con todas las vistas, se duplica su contenido, poniendo el cod kv aca se soluciona ese inconveniente
 <ConfirmPopup>: #Es para asegurar que sea el correo a guardar 
@@ -50,9 +54,19 @@ class MainWindow(Screen): #Por el momento es la ventana inicial que es para agre
 	def _on_answer(self, instance, answer): #al oprimir el boton si o no se activa esta funcion
 		self.popup.dismiss()
 		if answer=='si':
-			f = open ('correo.txt','w') #falta, pero simplemente crea el archivo para meter el correo
-			f.write(str(self.ids.correo.text)) #Falta-->Se debe verificar que el archivo no exista.
-			f.close()
+
+			#write the mail in the config.json
+			mail = str(self.ids.correo.text)
+			creator = Creator()
+			
+			config = creator.makeConfigJSON()
+
+			config["mail"] = mail
+			config["mailvalidate"] = True
+
+			creator.writeConfigJson(config)
+
+
 			self.manager.current="segunda" #Cambio de ventana aqui porque depende de lo que seleccione en el popup si, no.
 		elif answer=='no':
 			pass

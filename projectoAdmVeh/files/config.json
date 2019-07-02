@@ -1,5 +1,5 @@
 {
-    "mail": null,
-    "mailvalidate": false,
+    "mail": "jofemago@utp.edu.co",
+    "mailvalidate": true,
     "init": true
 }

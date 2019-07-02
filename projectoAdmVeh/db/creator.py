@@ -11,12 +11,13 @@ from modelo import BD_tipoVehiculo, BD_marcaVehiculo,BD_lineaVehiculo
 from modelo import BD_combustible, BD_vehiculo, BD_tacometro
 #from modelo import makeAllTables
 #from modelo.BD_tipoVehiculo import _TipoVehiculo
+import json
 
-
-
+#files to make the bootstraping of the
 rutaclase = "./files/clase.csv"
 rutamarca = "./files/marca.csv"
 rutalinea = "./files/linea.csv"
+pathjson = "./files/config.json"
 
 class Creator():
     base = makeBase()
@@ -25,6 +26,19 @@ class Creator():
 
     def __init__(self):
         pass
+
+    def makeConfigJSON(self):
+        config = {}
+        with open(pathjson, "r") as f:
+            config = json.load(f)
+        f.close()
+        return config
+
+
+    def writeConfigJson(self, config):
+        with open(pathjson, "w+") as filejson:
+            json.dump(config , filejson , indent= 4)
+        filejson.close()
 
     def makeDB(self):
 

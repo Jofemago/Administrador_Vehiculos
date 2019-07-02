@@ -1,12 +1,16 @@
-from creator import Creator
-
+from db.creator import Creator
+#from negocio.combustible import Combustible
 
 #how to make the database
+
+
 x = Creator()
-#x.makeDB()
-#x.makeAllTables()
-#x.loadTipoMarcaLineaVehiculo()
+x.makeDB()
+x.makeAllTables()
+x.loadTipoMarcaLineaVehiculo()
 x.loadCombustible()
+
+
 #rom negocio.tipovehiculo import TipoVehiculo
 
 

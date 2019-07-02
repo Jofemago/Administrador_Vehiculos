@@ -64,7 +64,7 @@ class Creator():
         ses.close()
 
     def loadCombustible(self):
-        l = [[1,"Gasolina", "galones"],[2, "Diesel", "Galones"],[3, "Gas", "m3"], [4, "Acpm", "galones"]]
+        l = [[1,"Gasolina", "galones"],[2, "Diesel", "Galones"],[3, "Gas", "m3"], [4, "ACPM", "galones"]]
         elementstoUpload = [BD_combustible._Combustible(id = c[0], nombre = c[1], medida = c[2]) for c in l]
         Session = sessionmaker(bind=self.eng)
         ses = Session()

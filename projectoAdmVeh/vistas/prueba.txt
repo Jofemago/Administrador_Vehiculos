@@ -1,0 +1,8 @@
+Esto es una archivo
+que va ir cambiando el 
+numero de lineas
+solo para probar si la lista
+de alarmas se va actualizando
+asdf
+
+Este archivo es usado para que dependiendo de x numeor de lineas, listar x alarmas.

@@ -1,0 +1,105 @@
+WindowManager:
+    #MainWindow:
+    SecondWindow:
+    TableroPrincipal:
+
+<MainWindow>:
+    name: "main"
+    Label:
+        text: "[color=ff9933][b]Bienvenido al administrador de vehículos[/b][/color]"
+        markup:True
+        #pos: (0,530)
+        font_size: 30
+        size_hint: (1,.1)
+        pos_hint: {"x": 0, 'top':1} 
+
+    TextInput:
+        id: correo
+        multiline: False
+        hint_text: "Ingrese el correo predeterminado"
+        size_hint: (.8,.09)
+        #pos: (0,450)   
+        pos_hint: {"center_x": 0.5, 'top':0.9} 
+
+    Button:
+        id:btn
+        text: "Guardar"
+        on_release:
+            root.direccionadoBotonGuardarCorreo()
+            root.manager.transition.direction = "left"
+        size_hint:(.2,.1)
+        #pos: (0,370)
+        pos_hint: {"center_x":.5, 'top':0.8}            
+
+#<ConfirmPopup>: #Lo implemento dode esta el codigo de python para que no se me dupique el contenido del popup.
+
+
+#<secondWindow>: el codigo kv lo meto en el archivo ventanaAdminVehiculo.py
+
+<AgregarVehiculo>: #esto se va a comportar como popup para poder agregar el vehiculo ingresado al scroll.
+    name: "tercera" #aun no lo quito, pero ya no es como tal una ventana, es un popup, no tengo que ponerle nombre.
+    BoxLayout:
+        orientation: "vertical"
+        BoxLayout:
+            size_hint_y:0.3
+            Label: 
+                text: "Elija su vehiculo"
+
+        BoxLayout:
+            GridLayout:
+                cols: 2
+                spacing: 20 
+                Label:
+                    text: "Nombre del vehiculo"
+                TextInput:
+                    id: nombreVehiculo
+                    multiline: False
+                    size_hint:(0.1,0.01)
+                Label:
+                    text: "Valor del tacometro"
+                TextInput:
+                    id: valorTacometro
+                    multiline: False
+                    #size_hint:(0.5,0.01)
+                    input_filter: "float"
+                Label:
+                    text: "Tipo de gasolina"
+                Spinner:
+                    id: spinner_0
+                    text: 'Combustible'
+                    values: ('Gasolina', 'Diesel','Gas', 'ACPM')
+                    size_hint: [0.3, None]
+                    height: '32dp'
+            GridLayout: #Este lo pongo para generar un espacio a la der y que los textinput queden con menos ancho
+                size_hint_x:.2
+        BoxLayout:
+            Spinner:
+                id: spinner_1
+                text: 'Tipo vehiculo'
+                size_hint: [0.3, None]
+                height: '32dp'
+                on_text: root.marcasDeTipoVehiculo()
+            Spinner:
+                id: spinner_2
+                text: 'marca'
+                size_hint: [0.3, None]
+                height: '32dp'
+                on_text: root.modelosDeMarcaVehiculo()
+            Spinner:
+                id: spinner_3
+                text: 'modelo'
+                size_hint: [0.3, None]
+                height: '32dp'
+
+        BoxLayout:
+            Label:
+            Button: 
+                text: "Guardar"
+                size_hint: [.4,0.2]
+                pos_hint: {"center_x":.5, 'top':0.8}
+                on_release:
+                    root.dispatch('on_guardar')
+            Label:
+                id: advertenciaAgregarVehiculo
+                text: ""
+                color: 1,0,0,1

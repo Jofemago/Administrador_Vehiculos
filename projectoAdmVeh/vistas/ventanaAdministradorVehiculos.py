@@ -121,6 +121,7 @@ class SecondWindow(Screen):
 		#print("instance:", instance)
 		resultadoVentanaAgregarVehiculo=self.content.on_guardar() #La pos 0 me determina si los datos de agregarVeh son correctos o no.
 		if resultadoVentanaAgregarVehiculo[0]: #pos que contiene True o False
+            self.vehiculosinapp.append(resultadoVentanaAgregarVehiculo[2])
 			box=BoxLayout(orientation="horizontal")
 			box.add_widget(BotonVehiculo(text=resultadoVentanaAgregarVehiculo[1])) #pos que tiene nombre del vehiculo.
 			box.add_widget(BotonUbicacion(text="ubicacion")) #Los ids son iguales y corresponden al nombre del vehiculo

@@ -22,7 +22,7 @@ pathjson = "./files/config.json"
 class Creator():
     base = makeBase()
 
-    eng = makeEngine() 
+    eng = makeEngine()
 
     def __init__(self):
         pass
@@ -60,7 +60,7 @@ class Creator():
 
 
     def loadLinea(self):
-        
+
         lineas = []
         with open(rutalinea) as ins:
             for line in ins:
@@ -77,6 +77,18 @@ class Creator():
         ses.commit()
         ses.close()
 
+    def addVehiculesPrueba(self):
+
+        prueba1 = BD_vehiculo._Vehiculo(id = 2, nombre = "veh1", idLineaVehiculo = 1, idCombustible = 1)
+        prueba2 = BD_vehiculo._Vehiculo(id = 1, nombre = "veh2", idLineaVehiculo = 1, idCombustible = 1)
+        prueba3 = BD_vehiculo._Vehiculo(id = 3, nombre = "veh3", idLineaVehiculo = 1, idCombustible = 1)
+
+        Session = sessionmaker(bind=self.eng)
+        ses = Session()
+        ses.add_all([prueba1, prueba2, prueba3])
+        ses.commit()
+        ses.close()
+
     def loadCombustible(self):
         l = [[1,"Gasolina", "galones"],[2, "Diesel", "Galones"],[3, "Gas", "m3"], [4, "ACPM", "galones"]]
         elementstoUpload = [BD_combustible._Combustible(id = c[0], nombre = c[1], medida = c[2]) for c in l]
@@ -86,9 +98,9 @@ class Creator():
         ses.commit()
         ses.close()
 
-        
+
     def loadMarca(self):
-        
+
         marcas = []
         with open(rutamarca) as ins:
             for line in ins:
@@ -113,7 +125,7 @@ class Creator():
             for line in ins:
                 clases.append(line.replace('\n', ""))
         clases = clases[1:]
-        
+
         for i in range(len(clases)):
             clases[i] = clases[i].split(",")[1:]
         #print(clases)

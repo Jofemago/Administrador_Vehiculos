@@ -5,11 +5,13 @@ from db.creator import Creator
 
 
 x = Creator()
+x.addVehiculesPrueba()
+"""
 x.makeDB()
 x.makeAllTables()
 x.loadTipoMarcaLineaVehiculo()
 x.loadCombustible()
-
+"""
 
 #rom negocio.tipovehiculo import TipoVehiculo
 

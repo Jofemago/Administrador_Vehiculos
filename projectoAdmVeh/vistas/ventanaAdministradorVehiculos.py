@@ -1,4 +1,4 @@
-from kivy.uix.screenmanager import ScreenManager, Screen 
+from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
@@ -12,10 +12,11 @@ from vistas.anadirVehiculo import AgregarVehiculo
 
 #import desde negocio
 from negocio.tipoVehiculo import TipoVehiculo
+from negocio.vehiculo import Vehiculo
 
-""" 
+"""
 Los botones de vehiculo, Ubicacion y Eliminar los implemento como clases aparte, esto con el objeto de poder obtener la instancia de cada
-btn al presionar uno, ya que desde el kv solo es mandar como parametro a la funcion (self) si el btn es presionado, hay otras formas, 
+btn al presionar uno, ya que desde el kv solo es mandar como parametro a la funcion (self) si el btn es presionado, hay otras formas,
 pero no quiero, con esto puedo obtener el id correspondiente al vehiculo.
 """
 #l=[]
@@ -29,14 +30,14 @@ k=Builder.load_string("""
         BoxLayout:
             size_hint_y:0.3
             orientation:"vertical"
-            Label: 
+            Label:
                 text: "Administrador de vehiculos"
             BoxLayout:
-                Label: 
+                Label:
                     text: "Veiculo"
-                Label: 
+                Label:
                     text: "Ubicacion"
-                Label: 
+                Label:
                     text: "Eliminar"
         ScrollView:
             id: scroll
@@ -48,13 +49,13 @@ k=Builder.load_string("""
                 height: self.minimum_height
         BoxLayout:
             size_hint_y:0.25
-            spacing: 50 
+            spacing: 50
             padding: 20,30,50,10 #Margenes: izquierda, arriba, derecha, abajo
-            Button: 
+            Button:
                 text: "Agregar Vehiculo"
                 on_release:
                 	root.oprimidoBtnAgregarVehiculo()
-            Button: 
+            Button:
                 text: "GPS"
 
 <BotonVehiculo>:
@@ -75,14 +76,14 @@ class BotonUbicacion(Button):
 class BotonEliminar(Button):
 	"""ATENCION
 		Para la f eliminarVeh no me permite eliminar botones con el parent cosa que es extraña, porque con solo poner self.parent me muestra el pad
-		re del btn, supuse que tal vez me interpretaba el btn como un objeto diferente, como sea, lo que hice fue crear una lista l con todos 
+		re del btn, supuse que tal vez me interpretaba el btn como un objeto diferente, como sea, lo que hice fue crear una lista l con todos
 		los objetos boxlayout creados, luego comparo ese con el boxlayout padre de mi btn seleccionado y borro los botones (veh, ubic, elim)
 		pero desde el obj metido en la lista y funciona. Luego meti el gridLayout que contiene a todos los boxlayout en la ultima pos de la lis
 		ta para poder accederlo y elimimar el boxlayout que contiene al boton oprimido, lo elimina, pero en la terminal de cmd salen errores
 		al yo cerrar la ventana de kivy.
 
 		LO HE SOLUCIONADO
-		Utilizando la lista l para meter los objetos BoxLayout y Grid ([objBox,objBox,objBox,..., objGridLayout]) podia eliminar los 
+		Utilizando la lista l para meter los objetos BoxLayout y Grid ([objBox,objBox,objBox,..., objGridLayout]) podia eliminar los
 		objetos BoxLayout si se seleccionaba el boton respectivo, sin embargo al cerrar la aplicacion, se generaban errores, lo que pienso,
 		que yo eliminaba un box pero como era una copia quedaba el otro, esto puede generar incosistencias, al hacer la prueba unitaria con este
 		modulo, me di cuenta que mi implementacion funcionaba con normalidad, sin necesidad de una lista, solo con self.parent... ahora, he quitado
@@ -102,10 +103,11 @@ class SecondWindow(Screen):
 	#l=[]
 	def __init__(self, **kwargs):
 		super(SecondWindow, self).__init__(**kwargs)
-		#lista de todos los vehiculos
-		Clock.schedule_once(lambda dt:self.scrollVehiculos()) #hago este proceso, porque si trato de usar los self.ids desde el constructor,
-											   #Me dara error, ya que no se han creado todavia, por eso con clock lo que trato es
-											   #retardar el proceso, de esta manera funciona, con la func lambda no tengo que obtener dt.
+		Clock.schedule_once(lambda dt:self.scrollVehiculos())
+		self.vehiculosinapp = []
+        #lista de todos los vehiculos
+
+
 
 	def oprimidoBtnAgregarVehiculo(self):
 		self.content = AgregarVehiculo() #Este texto que paso lo captura el stringProperty
@@ -116,6 +118,7 @@ class SecondWindow(Screen):
 		self.popup.open()
 
 	def _on_guardar(self, instance):
+		#print("instance:", instance)
 		resultadoVentanaAgregarVehiculo=self.content.on_guardar() #La pos 0 me determina si los datos de agregarVeh son correctos o no.
 		if resultadoVentanaAgregarVehiculo[0]: #pos que contiene True o False
 			box=BoxLayout(orientation="horizontal")
@@ -127,18 +130,21 @@ class SecondWindow(Screen):
 		else:
 			pass
 
-	def scrollVehiculos(self): 
+	def scrollVehiculos(self):
 		# CONSULTA BASE DE DATOS PARA LISTAR TODOS LOS VEHICULOS
-		
-		for i in range(5): 
+		for e in Vehiculo.listarNameVehiculos(Vehiculo):
+			self.vehiculosinapp.append(e)
+		#self.vehiculosinapp.append()
+		for i in range(len(self.vehiculosinapp)):
+			#print(self.vehiculosinapp)
 			#self.l.append(BoxLayout(orientation="horizontal"))
 			#self.ids.contenedorFilas.add_widget(self.l[-1]) #al gridlayout le agrego lo boxlayout necesarios, en cada boxlayout puedo posicionar
 															 #mis tres botones.
 			self.ids.contenedorFilas.add_widget(BoxLayout(orientation="horizontal"))
-		for i, n in enumerate(self.ids.contenedorFilas.children):									   
-			n.add_widget(BotonVehiculo(text="vehiculo"+str(i)))
-			n.add_widget(BotonUbicacion(text="ubicacion"+str(i))) #Los ids son iguales y corresponden al nombre del vehiculo
-			n.add_widget(BotonEliminar(text="Eliminar"+str(i)))
+		for i, n in enumerate(self.ids.contenedorFilas.children):
+			n.add_widget(BotonVehiculo(text=(self.vehiculosinapp[i].nombre)))
+			n.add_widget(BotonUbicacion(text="ubicacion")) #Los ids son iguales y corresponden al nombre del vehiculo
+			n.add_widget(BotonEliminar(text="Eliminar"))
 
 
 			#l.append(n)
@@ -147,7 +153,7 @@ class SecondWindow(Screen):
 
 	"""
 	#Esta funcion la dejo por si algo, no funciono para eliminar los botones, pero fue un intento que depronto me sirva en el futuro.
-	def eliminarVehiculo(self, idBoton): #esto es para eliminar los botones asociados a un boxL pero sale raro, creo que es porque meto los 
+	def eliminarVehiculo(self, idBoton): #esto es para eliminar los botones asociados a un boxL pero sale raro, creo que es porque meto los
 										 #boxLayout a una lista, o porque el parametr idBoton me lo pasan desde otra clase.
 		#print(idBoton)
 		#self.l[int(idBoton)].clear_widgets()

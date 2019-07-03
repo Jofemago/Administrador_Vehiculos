@@ -37,7 +37,15 @@ class TipoVehiculo:
         
         return [TipoVehiculo( int(i.id), str(i.tipo)) for i in query]
 
-        
+    def selectTipo(self, tipo, listoftipos):
+
+        #print(tipo, listoftipos)
+
+        for t in listoftipos:
+
+            if t.tipo == tipo:
+                return t
+
 
 
 if __name__ == "__main__":

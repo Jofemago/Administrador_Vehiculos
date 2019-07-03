@@ -12,7 +12,7 @@ class _Vehiculo(Base):
     __tablename__ = "Vehiculo"
 
     id = Column(Integer, primary_key = True)
-    nombre = Column(String(10))
+    nombre = Column(String(10), nullable=False, unique=True)
     idLineaVehiculo = Column(Integer)#foreing key
     idCombustible = Column(Integer)#foreing key
 

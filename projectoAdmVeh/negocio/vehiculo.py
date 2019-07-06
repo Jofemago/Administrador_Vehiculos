@@ -88,6 +88,24 @@ class Vehiculo:
         return res
 
 
+    def deleteVehiculo(self, name):
+
+        Session = sessionmaker(bind=self.eng)
+        ses = Session()
+        try:
+            for row in ses.query(_Vehiculo):
+                if row.nombre == name:
+                    ses.delete(row)
+            #ses.query(_Vehiculo.nombre == name)
+        except:
+            print("no se pudo eliminar")
+
+
+        ses.commit()
+        ses.close()
+
+
+
 
 
 #stmt = exists().where(Address.user_id==User.id)

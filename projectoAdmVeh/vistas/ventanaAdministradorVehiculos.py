@@ -9,6 +9,8 @@ from kivy.lang import Builder
 #import from another views
 from vistas.anadirVehiculo import AgregarVehiculo
 
+#importando desde el packete db
+from db.creator import Creator
 
 #import desde negocio
 from negocio.tipoVehiculo import TipoVehiculo
@@ -59,15 +61,22 @@ k=Builder.load_string("""
                 text: "GPS"
 
 <BotonVehiculo>:
-    on_press: app.root.current="tableroPrincipal"
+    on_press: root.changeWindows(app)
 <BotonUbicacion>:
     on_press: root.eliminarVehiculo()
 <BotonEliminar>:
     on_press: root.eliminarVehiculo()
 """)
 class BotonVehiculo(Button):
-	def eliminarVehiculo(self):
-		pass
+	def changeWindows(self,app):
+
+		c = Creator()
+		json = c.makeConfigJSON()
+		print("PASO DE VENTANA_____VEHICULO:",self.parent.children[2].text)
+		json["nameVehicule"] = self.parent.children[2].text
+		c.writeConfigJson(json)
+		app.root.current="tableroPrincipal"
+		#self.current = "tableroPrincipal"
 
 class BotonUbicacion(Button):
 	def eliminarVehiculo(self):
@@ -90,7 +99,12 @@ class BotonEliminar(Button):
 		el codigo kv del archivo vistas.kv y lo integro en este archivo y funciona.
 	"""
 	def eliminarVehiculo(self):
-		print (self.parent.children[2].text)#bd
+
+		nombre = self.parent.children[2].text
+		print ("vehiculo a eliminar", nombre)#bd
+		Vehiculo.deleteVehiculo(Vehiculo, nombre)
+
+		
 		self.parent.parent.remove_widget(self.parent)
 		#print(self.parent.remove_widget(self)) #Es para que elimine los botones con respecto al eliminar, pero genera error, si se prueba como un modulo
 								 #individual esta bien.
@@ -121,7 +135,7 @@ class SecondWindow(Screen):
 		#print("instance:", instance)
 		resultadoVentanaAgregarVehiculo=self.content.on_guardar() #La pos 0 me determina si los datos de agregarVeh son correctos o no.
 		if resultadoVentanaAgregarVehiculo[0]: #pos que contiene True o False
-            self.vehiculosinapp.append(resultadoVentanaAgregarVehiculo[2])
+			self.vehiculosinapp.append(resultadoVentanaAgregarVehiculo[2])
 			box=BoxLayout(orientation="horizontal")
 			box.add_widget(BotonVehiculo(text=resultadoVentanaAgregarVehiculo[1])) #pos que tiene nombre del vehiculo.
 			box.add_widget(BotonUbicacion(text="ubicacion")) #Los ids son iguales y corresponden al nombre del vehiculo

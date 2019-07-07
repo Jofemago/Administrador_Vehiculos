@@ -59,6 +59,9 @@ k=Builder.load_string("""
                 	root.oprimidoBtnAgregarVehiculo()
             Button:
                 text: "GPS"
+                on_release:
+
+                    root.manager.current = "gps"
 
 <BotonVehiculo>:
     on_press: root.changeWindows(app)
@@ -104,7 +107,7 @@ class BotonEliminar(Button):
 		print ("vehiculo a eliminar", nombre)#bd
 		Vehiculo.deleteVehiculo(Vehiculo, nombre)
 
-		
+
 		self.parent.parent.remove_widget(self.parent)
 		#print(self.parent.remove_widget(self)) #Es para que elimine los botones con respecto al eliminar, pero genera error, si se prueba como un modulo
 								 #individual esta bien.

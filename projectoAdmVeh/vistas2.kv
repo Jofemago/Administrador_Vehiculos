@@ -2,6 +2,7 @@ WindowManager:
     #MainWindow:
     SecondWindow:
     TableroPrincipal:
+    VentanaGPS:
 
 <MainWindow>:
     name: "main"
@@ -11,15 +12,15 @@ WindowManager:
         #pos: (0,530)
         font_size: 30
         size_hint: (1,.1)
-        pos_hint: {"x": 0, 'top':1} 
+        pos_hint: {"x": 0, 'top':1}
 
     TextInput:
         id: correo
         multiline: False
         hint_text: "Ingrese el correo predeterminado"
         size_hint: (.8,.09)
-        #pos: (0,450)   
-        pos_hint: {"center_x": 0.5, 'top':0.9} 
+        #pos: (0,450)
+        pos_hint: {"center_x": 0.5, 'top':0.9}
 
     Button:
         id:btn
@@ -29,7 +30,7 @@ WindowManager:
             root.manager.transition.direction = "left"
         size_hint:(.2,.1)
         #pos: (0,370)
-        pos_hint: {"center_x":.5, 'top':0.8}            
+        pos_hint: {"center_x":.5, 'top':0.8}
 
 #<ConfirmPopup>: #Lo implemento dode esta el codigo de python para que no se me dupique el contenido del popup.
 
@@ -42,13 +43,13 @@ WindowManager:
         orientation: "vertical"
         BoxLayout:
             size_hint_y:0.3
-            Label: 
+            Label:
                 text: "Elija su vehiculo"
 
         BoxLayout:
             GridLayout:
                 cols: 2
-                spacing: 20 
+                spacing: 20
                 Label:
                     text: "Nombre del vehiculo"
                 TextInput:
@@ -93,7 +94,7 @@ WindowManager:
 
         BoxLayout:
             Label:
-            Button: 
+            Button:
                 text: "Guardar"
                 size_hint: [.4,0.2]
                 pos_hint: {"center_x":.5, 'top':0.8}

@@ -3,10 +3,10 @@
 #Importacion de vistas
 import vistas.ingresarCorreo
 import vistas.administradorVentanas
-import vistas.ventanaAdministradorVehiculos 
-import vistas.tableroPrincipal 
-
-
+import vistas.ventanaAdministradorVehiculos
+import vistas.tableroPrincipal
+import vistas.ventanaGPS
+#import kivy.garden.mapview
 #to create the database
 from db.creator import Creator
 
@@ -26,14 +26,14 @@ class VistasApp(App):
 		creator = Creator()
 
 		config = creator.makeConfigJSON()
-		
+
 
 		#print("La configuracion\n",config)
 		if not config["init"]:
-			
+
 
 			#make the database
-			
+
 			creator.makeDB()
 			creator.makeAllTables()
 			creator.loadTipoMarcaLineaVehiculo()
@@ -41,13 +41,13 @@ class VistasApp(App):
 
 			print("____________________________Creacion completa___________________________________")
 			config["init"] = True
-			
+
 			creator.writeConfigJson(config)
 			k=Builder.load_file("vistas.kv")
 
 
 		if not config["mailvalidate"]:
-			#request the mail 
+			#request the mail
 			k=Builder.load_file("vistas.kv")
 		else :
 			k=Builder.load_file("vistas2.kv")

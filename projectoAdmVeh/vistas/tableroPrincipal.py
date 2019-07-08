@@ -1,4 +1,4 @@
-from kivy.uix.screenmanager import ScreenManager, Screen 
+from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
@@ -73,6 +73,15 @@ Builder.load_string("""
                         size_hint_y: None #Si esto no se pone, el scroll no aparece.
                         row_default_height: root.height*0.1
                         height: self.minimum_height
+                BoxLayout:
+                    size_hint_y: 0.1
+                    BoxLayout:
+                    Button:
+                        text: "Regresar"
+                        on_press:
+                            root.manager.current = "segunda"
+                    BoxLayout
+
 
         TabbedPanelItem:
             text: 'Mantenimiento'
@@ -109,16 +118,16 @@ Builder.load_string("""
                             text: "Guardar"
                             on_release: root.agregarMantenimiento()
                     BoxLayout:
-                        Label: 
+                        Label:
                             text: "Fecha"
                             color: 1,1,0,1
-                        Label: 
+                        Label:
                             text: "Precio"
                             color: 0,1,1,1
-                        Label: 
+                        Label:
                             text: "Kilometros"
                             color: 0,0,1,1
-                        Label: 
+                        Label:
                             text: "Descripcion"
                             color: 0,1,0,1
                 ScrollView:
@@ -176,7 +185,7 @@ Builder.load_string("""
                     size_hint_y:0.5
                     BoxLayout:
                         TextInput:
-                            hint_text: "Correo electronico" 
+                            hint_text: "Correo electronico"
                             multiline: False
                     GridLayout:
                         cols:2
@@ -203,10 +212,10 @@ Builder.load_string("""
                     padding: 150,0,100,0
                     Label:
                         text: "Nombre de la alarma:"
-                    TextInput: 
+                    TextInput:
                         id:nombre
                         multiline: False
-                        hint_text:"Nombre diferente alarmas programada" 
+                        hint_text:"Nombre diferente alarmas programada"
                 GridLayout:
                     cols:1
                     GridLayout:
@@ -280,6 +289,9 @@ Builder.load_string("""
 
                     Button:
                         text: "Regresar"
+                        on_press:
+                            root.manager.current="segunda"
+                            root.manager.transition.direction = "right"
 
 """
 )
@@ -297,8 +309,8 @@ class TableroPrincipal(Screen):
     def listarRecargas(self):
         for i in range(3):
             self.ids.contenedorRecargas.add_widget(BoxLayout(orientation="horizontal"))
-        for i, n in enumerate(self.ids.contenedorRecargas.children): 
-            n.add_widget(Label(text=str(time.strftime("%d/%m/%Y"))))                                     
+        for i, n in enumerate(self.ids.contenedorRecargas.children):
+            n.add_widget(Label(text=str(time.strftime("%d/%m/%Y"))))
             n.add_widget(Label(text="Precio"+str(i)))
             n.add_widget(Label(text="Kilometros"+str(i)))
 
@@ -331,7 +343,7 @@ class TableroPrincipal(Screen):
 
     #-----------------------------------PARA CREAR UN REPORTE--------------------------------------
     def crearReporte(self):
-        validarFecha=True 
+        validarFecha=True
         try:
                datetime.strptime(self.ids.fechaInicial.text, '%d/%m/%Y') #Verifico que la fecha sea correcta.
                datetime.strptime(self.ids.fechaFinal.text, '%d/%m/%Y')
@@ -351,7 +363,7 @@ class TableroPrincipal(Screen):
         self.text = "Hora: "+str(time.strftime("%H:%M:%S"))
 
     def verAlarmas(self): #Funcion que crea el popup para listar todas las alarmas.
-        content=VerAlarmas() 
+        content=VerAlarmas()
         content.bind(on_quitarPopup=self.quitarPopupAlarmas)
         self.popup = Popup(title="ALARMAS PROGRAMADAS",
                             content=content,

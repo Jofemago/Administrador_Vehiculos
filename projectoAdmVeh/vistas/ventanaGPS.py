@@ -1,12 +1,12 @@
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
+from kivy.garden.mapview import MapSource
 
 if __name__ == '__main__' and __package__ is None:
     from os import sys, path
     sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 root = Builder.load_string("""
-#:import MapSource kivy.garden.mapview.MapSource
 
 <Toolbar@BoxLayout>:
     size_hint_y: None
@@ -40,7 +40,7 @@ root = Builder.load_string("""
 			        id: mapview
 			        lat: 4.5330700
 			        lon: -75.7043800
-			        zoom: slider.value
+			        zoom: 8
 			        #size_hint: .5, .5
 			        #pos_hint: {"x": .25, "y": .25}
 
@@ -74,20 +74,8 @@ root = Builder.load_string("""
 				    	on_release:
 				    		root.manager.current= "segunda"
 				    		root.manager.transition.direction = "right"
-                            
 
-		BoxLayout:
-			size_hint_x: 0.07
-		    Slider:
-		        id: slider
-		        min: 1
-		        max: 20
-		        step: 1
-		        value: 10
-		        orientation: 'vertical'
 
-		    #Label:
-		        #text: str(slider.value)
     """)
 
 class VentanaGPS(Screen):

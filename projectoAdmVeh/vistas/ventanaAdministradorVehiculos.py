@@ -4,7 +4,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.popup import Popup
 from kivy.lang import Builder
-
+import requests
 
 #import from another views
 from vistas.anadirVehiculo import AgregarVehiculo
@@ -66,7 +66,7 @@ k=Builder.load_string("""
 <BotonVehiculo>:
     on_press: root.changeWindows(app)
 <BotonUbicacion>:
-    on_press: root.ubicar()
+    on_press: root.ubicacionVehiculo()
 <BotonEliminar>:
     on_press: root.eliminarVehiculo()
 """)
@@ -82,10 +82,27 @@ class BotonVehiculo(Button):
 		#self.current = "tableroPrincipal"
 
 class BotonUbicacion(Button):
-    def ubicar(self):
+    def ubicacionVehiculo(self):
+
+        #integracion base de datos
         nombre = self.parent.children[2].text
         print ("ubicar vehiculo", nombre)#bd
         print("id vehiculo: ", Vehiculo.getIdvehiculo(Vehiculo, nombre))
+
+        """
+        #lo que hizo pareja
+        ip_request = requests.get('https://get.geojs.io/v1/ip.json')
+        my_ip = ip_request.json()['ip']
+        geo_request = requests.get('https://get.geojs.io/v1/ip/geo/' +my_ip + '.json')
+        geo_data = geo_request.json()
+
+        #Agregar ubicacion DB
+        print(self.parent.children[2].text) #Para obtener el nombre del vehiculo.
+        print(geo_data['latitude'], geo_data['longitude'])
+
+        self.popup = Popup(title="ESTADO",content=Label(text="Ubicacion guardada correctamente"),size_hint=(0.7, 0.2))
+        self.popup.open()
+        """
 
 class BotonEliminar(Button):
 	"""ATENCION

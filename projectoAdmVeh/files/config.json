@@ -1,6 +1,6 @@
 {
-    "mail": "feoafdsadf",
-    "nameVehicule": "holiiiii",
+    "mail": null,
     "init": true,
-    "mailvalidate": true
+    "nameVehicule": null,
+    "mailvalidate": false
 }

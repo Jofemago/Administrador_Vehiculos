@@ -137,6 +137,14 @@ Builder.load_string("""
                         size_hint_y: None #Si esto no se pone, el scroll no aparece.
                         row_default_height: root.height*0.1
                         height: self.minimum_height
+                BoxLayout:
+                    size_hint_y: 0.1
+                    BoxLayout:
+                    Button:
+                        text: "Regresar"
+                        on_press:
+                            root.manager.current = "segunda"
+                    BoxLayout
         TabbedPanelItem:
             text: 'Reportes'
             BoxLayout:
@@ -195,6 +203,8 @@ Builder.load_string("""
                             text: "Aceptar"
                         Button:
                             text: "Regresar"
+                            on_press:
+                                root.manager.current = "segunda"
         TabbedPanelItem:
             text: 'Alarmas'
             BoxLayout:

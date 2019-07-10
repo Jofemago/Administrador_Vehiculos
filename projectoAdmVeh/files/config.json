@@ -1,6 +1,6 @@
 {
-    "mail": "",
+    "init": true,
     "mailvalidate": true,
-    "nameVehicule": null,
-    "init": true
+    "mail": "",
+    "nameVehicule": "jofemago"
 }

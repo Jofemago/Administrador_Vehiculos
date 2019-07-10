@@ -8,7 +8,7 @@ from modelo.createDatabase import makeBase
 
 
 from modelo import BD_tipoVehiculo, BD_marcaVehiculo,BD_lineaVehiculo
-from modelo import BD_combustible, BD_vehiculo, BD_tacometro
+from modelo import BD_combustible, BD_vehiculo, BD_tacometro, BD_ubicacionVehiculo
 #from modelo import makeAllTables
 #from modelo.BD_tipoVehiculo import _TipoVehiculo
 import json
@@ -52,6 +52,7 @@ class Creator():
         BD_combustible.makeTable(self.eng)
         BD_vehiculo.makeTable(self.eng)
         BD_tacometro.makeTable(self.eng)
+        BD_ubicacionVehiculo.makeTable(self.eng)
 
     def loadTipoMarcaLineaVehiculo(self):
         self.loadTipo()

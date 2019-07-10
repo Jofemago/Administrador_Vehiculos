@@ -58,6 +58,21 @@ class Vehiculo:
         ses.close()
         return ids[-1] + 1# se retorna el primer elemento
 
+    def getIdvehiculo(self, name):
+
+        print("obteniendo id del vehiculo:", name)
+        Session = sessionmaker(bind=self.eng)
+        ses = Session()
+        res = None
+        for id, nombre, in ses.query(_Vehiculo.id, _Vehiculo.nombre):
+            if nombre == name:
+                res = id
+                break
+
+
+        ses.close()
+        return res
+
     def addVehiculo(self, nombre, idLineaVehiculo, idCombustible):
 
         print("Añadiendo vehiculo___________:")

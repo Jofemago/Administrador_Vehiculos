@@ -66,7 +66,7 @@ k=Builder.load_string("""
 <BotonVehiculo>:
     on_press: root.changeWindows(app)
 <BotonUbicacion>:
-    on_press: root.eliminarVehiculo()
+    on_press: root.ubicar()
 <BotonEliminar>:
     on_press: root.eliminarVehiculo()
 """)
@@ -82,8 +82,10 @@ class BotonVehiculo(Button):
 		#self.current = "tableroPrincipal"
 
 class BotonUbicacion(Button):
-	def eliminarVehiculo(self):
-		pass
+    def ubicar(self):
+        nombre = self.parent.children[2].text
+        print ("ubicar vehiculo", nombre)#bd
+        print("id vehiculo: ", Vehiculo.getIdvehiculo(Vehiculo, nombre))
 
 class BotonEliminar(Button):
 	"""ATENCION

@@ -120,7 +120,12 @@ class VentanaGPS(Screen):
 		#Se hace la consulta a la BD para obtener las lat y lon de los vehiculos-----------------------BD
 		self.listaMarker.append(mapmarkerpopup)
 		for l in range(10):
-		    self.listaMarker.append(MapMarker(lat=random.randint(1, 5), lon=-75.7043800+l/2, color=(0,1,1,1)))
+			mapmarkerpopup=MapMarkerPopup(lat=random.randint(1, 5), lon=-75.7043800+l/2, color=(0,1,1,1), popup_size= (120,70))
+			bubble=Bubble()
+			label= Label(text= "[b]Ubicaion actual![/b]", markup= True, halign= "center")
+			bubble.add_widget(label)
+			mapmarkerpopup.add_widget(bubble)
+			self.listaMarker.append(mapmarkerpopup)
 		for i in range(10):
 		    self.ids.mapview.add_widget(self.listaMarker[i])
 

@@ -1,18 +1,22 @@
 import sqlalchemy
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String,Date
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
+
 Base = declarative_base()
 
-class _Tacometro(Base):
+class _Recarga(Base):
 
-    __tablename__ = "Tacometro"
+    __tablename__ = "Recarga"
 
     id = Column(Integer, primary_key = True)
-    idVehiculo = Column(Integer)#foreing key
-    valorTacometro = Column(Integer)
+    precioCombustible = Column(Integer)#foreing key
+    valorRecarga = Column(Integer)
+    fecha = Column(Date)
+    idTacometro = Column(Integer)
+    idVehiculo = Column(Integer)
 
 
 

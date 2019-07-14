@@ -11,6 +11,9 @@ from kivy.uix.tabbedpanel import TabbedPanel
 from kivy.uix.label import Label
 from vistas.verAlarmas import VerAlarmas
 
+#import from db
+from db.creator import Creator
+
 Builder.load_string("""
 #:import time time
 
@@ -85,6 +88,7 @@ Builder.load_string("""
 
         TabbedPanelItem:
             text: 'Mantenimiento'
+            on_release: root.confCorreo()
             BoxLayout:
                 orientation:"vertical"
                 BoxLayout:
@@ -193,7 +197,8 @@ Builder.load_string("""
                     size_hint_y:0.5
                     BoxLayout:
                         TextInput:
-                            hint_text: "Correo electronico"
+                            id: correopantalla
+                            hint_text: ""
                             multiline: False
                     GridLayout:
                         cols:2
@@ -313,7 +318,17 @@ class TableroPrincipal(Screen):
         super(TableroPrincipal,self).__init__(**kwargs)
         self.text = str(time.strftime("%H:%M:%S"))
         Clock.schedule_interval(self.on_time,1) #hago esto para que se este actualizando el tiempo al crear alarmas.
-        Clock.schedule_once(lambda dt:self.listarRecargas())
+        #Clock.schedule_once(lambda dt:self.listarRecargas())
+        Clock.schedule_once(lambda dt:self.confCorreo())
+
+
+
+    def confCorreo(self):
+
+        c = Creator()
+        filejson = c.makeConfigJSON()
+        self.ids.correopantalla.text = filejson["mail"]
+
 
     #-----------------------------------PARA RECARGAS--------------------------------------------
     def listarRecargas(self):
@@ -329,6 +344,8 @@ class TableroPrincipal(Screen):
             self.ids.datosIncompletosRecarga.text="Ingrese todos los datos"
         else:
             self.ids.datosIncompletosRecarga.text=""
+
+
             box=BoxLayout(orientation="horizontal")
             box.add_widget(Label(text=str(time.strftime("%d/%m/%Y"))))
             box.add_widget(Label(text=self.ids.precioRecarga.text))
@@ -363,8 +380,6 @@ class TableroPrincipal(Screen):
             self.ids.advertenciaResporte.text="Complete todos los datos"
         elif not validarFecha:
             self.ids.advertenciaResporte.text="No ha ingresado una fecha correcta..."
-        elif validarFecha: #se quita luego
-            pass#en esta parte debo validar si la fecha esta permitida con respecto a la fecha mas antigua y mas nueva.
         else:
             pass #puedo agregar en la base de datos.
     #-----------------------------------PARA VER ALARMAS--------------------------------------------

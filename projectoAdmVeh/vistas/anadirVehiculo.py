@@ -9,6 +9,7 @@ from negocio.marcaVehiculo import MarcaVehiculo
 from negocio.lineaVehiculo import LineaVehiculo
 from negocio.combustible import Combustible
 from negocio.vehiculo import Vehiculo
+from negocio.tacometro import Tacometro
 
 class AgregarVehiculo(Screen):
 	def __init__(self, **kwargs):
@@ -100,7 +101,8 @@ class AgregarVehiculo(Screen):
 			else:
 				#como no existe lo agrego a la base de datos
 				veh = Vehiculo.addVehiculo(Vehiculo, self.nombre, self.lineaSelect.id, self.combustible.id)
-
+				print("TIPO DEL KILOMETRAJE", type(self.kilometraje))
+				Tacometro.addTacometro(Tacometro, veh.id,int(self.kilometraje))
 				return [True, nombreVehiculo , veh]
 
 

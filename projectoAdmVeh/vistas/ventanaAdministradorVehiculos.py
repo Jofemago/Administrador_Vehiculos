@@ -2,6 +2,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
+from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.lang import Builder
 import requests
@@ -15,6 +16,7 @@ from db.creator import Creator
 #import desde negocio
 from negocio.tipoVehiculo import TipoVehiculo
 from negocio.vehiculo import Vehiculo
+from negocio.tacometro import Tacometro
 
 """
 Los botones de vehiculo, Ubicacion y Eliminar los implemento como clases aparte, esto con el objeto de poder obtener la instancia de cada
@@ -71,15 +73,18 @@ k=Builder.load_string("""
     on_press: root.eliminarVehiculo()
 """)
 class BotonVehiculo(Button):
-	def changeWindows(self,app):
-
-		c = Creator()
-		json = c.makeConfigJSON()
-		print("PASO DE VENTANA_____VEHICULO:",self.parent.children[2].text)
-		json["nameVehicule"] = self.parent.children[2].text
-		c.writeConfigJson(json)
-		app.root.current="tableroPrincipal"
-		#self.current = "tableroPrincipal"
+    def changeWindows(self,app):
+        c = Creator()
+        json = c.makeConfigJSON()
+        print("PASO DE VENTANA_____VEHICULO:",self.parent.children[2].text)
+        json["nameVehicule"] = self.parent.children[2].text
+        c.writeConfigJson(json)
+        app.root.current="tableroPrincipal"
+        print(app.root.screens[1].name)
+        for i in app.root.screens:
+            if i.name == "tableroPrincipal":
+                i.confCorreo()
+        #app.root.screens[1].confCorreo()
 
 class BotonUbicacion(Button):
     def ubicacionVehiculo(self):
@@ -99,42 +104,22 @@ class BotonUbicacion(Button):
         #Agregar ubicacion DB
         print(self.parent.children[2].text) #Para obtener el nombre del vehiculo.
         print(geo_data['latitude'], geo_data['longitude'])
-
+        """
         self.popup = Popup(title="ESTADO",content=Label(text="Ubicacion guardada correctamente"),size_hint=(0.7, 0.2))
         self.popup.open()
-        """
+
 
 class BotonEliminar(Button):
-	"""ATENCION
-		Para la f eliminarVeh no me permite eliminar botones con el parent cosa que es extraña, porque con solo poner self.parent me muestra el pad
-		re del btn, supuse que tal vez me interpretaba el btn como un objeto diferente, como sea, lo que hice fue crear una lista l con todos
-		los objetos boxlayout creados, luego comparo ese con el boxlayout padre de mi btn seleccionado y borro los botones (veh, ubic, elim)
-		pero desde el obj metido en la lista y funciona. Luego meti el gridLayout que contiene a todos los boxlayout en la ultima pos de la lis
-		ta para poder accederlo y elimimar el boxlayout que contiene al boton oprimido, lo elimina, pero en la terminal de cmd salen errores
-		al yo cerrar la ventana de kivy.
 
-		LO HE SOLUCIONADO
-		Utilizando la lista l para meter los objetos BoxLayout y Grid ([objBox,objBox,objBox,..., objGridLayout]) podia eliminar los
-		objetos BoxLayout si se seleccionaba el boton respectivo, sin embargo al cerrar la aplicacion, se generaban errores, lo que pienso,
-		que yo eliminaba un box pero como era una copia quedaba el otro, esto puede generar incosistencias, al hacer la prueba unitaria con este
-		modulo, me di cuenta que mi implementacion funcionaba con normalidad, sin necesidad de una lista, solo con self.parent... ahora, he quitado
-		el codigo kv del archivo vistas.kv y lo integro en este archivo y funciona.
-	"""
-	def eliminarVehiculo(self):
+    def eliminarVehiculo(self):
+        nombre = self.parent.children[2].text
+        idvehiculo = Vehiculo.getIdvehiculo(Vehiculo,nombre)
+        print("VEHICULO ID, eliminando.................:", nombre , idvehiculo )
+        Vehiculo.deleteVehiculo(Vehiculo,nombre)
+        Tacometro.eliminarByVehiculo(Tacometro, idvehiculo)
+        #aqui eliminar las recargas, los mantenimientos, las ubicacionnes, tacometros que tengan el id del vehiculo
+        self.parent.parent.remove_widget(self.parent)
 
-		nombre = self.parent.children[2].text
-		print ("vehiculo a eliminar", nombre)#bd
-		Vehiculo.deleteVehiculo(Vehiculo, nombre)
-
-
-		self.parent.parent.remove_widget(self.parent)
-		#print(self.parent.remove_widget(self)) #Es para que elimine los botones con respecto al eliminar, pero genera error, si se prueba como un modulo
-								 #individual esta bien.
-		"""
-		for obj in l:
-			if self.parent==obj:
-				l[-1].remove_widget(obj)
-		"""
 class SecondWindow(Screen):
 	#l=[]
 	def __init__(self, **kwargs):

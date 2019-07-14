@@ -1,5 +1,5 @@
 from kivy.lang import Builder
-from kivy.uix.screenmanager import Screen 
+from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
 from  kivy.uix.relativelayout import RelativeLayout
 from kivy.garden.mapview import MapView, MapSource, MapMarker, MapMarkerPopup
@@ -75,7 +75,7 @@ root = Builder.load_string("""
 			            text: "Latitude: {}".format(mapview.lat)
 				    Button:
 				    	text: "Regresar"
-				    	on_release: 
+				    	on_release:
 				    		root.manager.current= "segunda"
 				    		root.manager.transition.direction = "right"
 
@@ -92,13 +92,13 @@ root = Builder.load_string("""
     """)
 
 class VentanaGPS(Screen):
-	listaMarker=[] 
+	listaMarker=[]
 	def __init__(self, **kwargs):
 		super(VentanaGPS, self).__init__(**kwargs)
 		Clock.schedule_once(lambda dt:self.actualizarMarcadores())
 
 	def actualizarMarcadores(self): #Muestro los marcadores con las ubicaciones actualizadas en el mapa
-		ip_request = requests.get('https://get.geojs.io/v1/ip.json')
+		"""ip_request = requests.get('https://get.geojs.io/v1/ip.json')
 		my_ip = ip_request.json()['ip'] #con mi ip obtengo mi geolocalizacion
 		geo_request = requests.get('https://get.geojs.io/v1/ip/geo/' +my_ip + '.json')
 		geo_data = geo_request.json()
@@ -109,8 +109,8 @@ class VentanaGPS(Screen):
 		bubble=Bubble()
 		label= Label(text= "[b]Ubicaion actual![/b]", markup= True, halign= "center")
 		bubble.add_widget(label)
-		mapmarkerpopup.add_widget(bubble) #creo un marcador con etique para saber la ubicacion actual, es de color rojo
-		
+		mapmarkerpopup.add_widget(bubble) #creo un marcador con etique para saber la ubicacion actual, es de color rojo"""
+
 
 		if len(self.listaMarker)>0:
 		    for marker in range(len(self.listaMarker)):
@@ -118,7 +118,7 @@ class VentanaGPS(Screen):
 		    self.listaMarker=[] #La reseteo para poder meter los mapMarker de los vehiculos actualizados.
 
 		#Se hace la consulta a la BD para obtener las lat y lon de los vehiculos-----------------------BD
-		self.listaMarker.append(mapmarkerpopup)
+		#self.listaMarker.append(mapmarkerpopup)
 		for l in range(10):
 			mapmarkerpopup=MapMarkerPopup(lat=random.randint(1, 5), lon=-75.7043800+l/2, color=(0,1,1,1), popup_size= (120,70))
 			bubble=Bubble()

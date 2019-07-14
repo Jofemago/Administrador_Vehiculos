@@ -56,6 +56,23 @@ class Tacometro:
 
         return res
 
+    def validarTacometro(self, kms, idVehiculo):
+        value = self.getMaxValueByVehiculo(self, idVehiculo)
+        return value >= kms
+
+    def getMaxValueByVehiculo(self,idVehiculo):
+        print("obteniendo el valor maximo en tacometro por vehiculo")
+        l = [0]
+        Session = sessionmaker(bind=self.eng)
+        ses = Session()
+        for row in ses.query(_Tacometro).order_by(_Tacometro.valorTacometro):
+            if row.idVehiculo == idVehiculo:
+                l.append(row.valorTacometro)
+
+        ses.close()
+        print("valores de tacometro registrado_________",l)
+        return l[-1]
+
     def getIdMax(self):
 
         print("obteniendo id maximo de tacometro para un vehiculo")

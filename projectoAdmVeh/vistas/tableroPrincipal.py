@@ -16,6 +16,9 @@ from db.creator import Creator
 
 #import from negocio
 from negocio.recarga import Recarga
+from negocio.vehiculo import Vehiculo
+from negocio.tacometro import Tacometro
+from negocio.mantenimiento import Mantenimiento
 
 Builder.load_string("""
 #:import time time
@@ -72,6 +75,9 @@ Builder.load_string("""
                     Label:
                         text: "Kilometros Recorridos"
                         color: 0,0,1,1
+                    Label:
+                        text: "vehiculo"
+                        color: 0,1,0,1
                 ScrollView:
                     GridLayout:
                         id:contenedorRecargas
@@ -136,6 +142,9 @@ Builder.load_string("""
                             color: 0,0,1,1
                         Label:
                             text: "Descripcion"
+                            color: 0,1,0,1
+                        Label:
+                            text: "vehiculo"
                             color: 0,1,0,1
                 ScrollView:
                     GridLayout:
@@ -348,9 +357,12 @@ class TableroPrincipal(Screen):
         c = Creator()
         filejson = c.makeConfigJSON()
         nombreVehiculo = filejson["nameVehicule"]
+        idVehiculo = Vehiculo.getIdvehiculo(Vehiculo, nombreVehiculo)
 
         if self.ids.precioRecarga.text=="" or self.ids.kilometrosRecarga.text=="":
             self.ids.datosIncompletosRecarga.text="Ingrese todos los datos"
+        elif Tacometro.validarTacometro(Tacometro,int(self.ids.kilometrosRecarga.text), idVehiculo):
+            self.ids.datosIncompletosRecarga.text="Esos kilometros ya fueron registrados debe ser superior"
         else:
             self.ids.datosIncompletosRecarga.text=""
 
@@ -360,6 +372,7 @@ class TableroPrincipal(Screen):
             box.add_widget(Label(text=str(time.strftime("%d/%m/%Y"))))
             box.add_widget(Label(text=self.ids.precioRecarga.text))
             box.add_widget(Label(text=self.ids.kilometrosRecarga.text))
+            box.add_widget(Label(text=nombreVehiculo))
             self.ids.contenedorRecargas.add_widget(box)
 
     #-------------------------------------PARA MANTENIMIENTOS----------------------------------
@@ -367,15 +380,30 @@ class TableroPrincipal(Screen):
         pass
 
     def agregarMantenimiento(self):
+
+        c = Creator()
+        filejson = c.makeConfigJSON()
+        nombreVehiculo = filejson["nameVehicule"]
+        idVehiculo = Vehiculo.getIdvehiculo(Vehiculo, nombreVehiculo)
+
         if self.ids.precioMantenimiento.text=="" or self.ids.kilometrosMantenimiento.text=="" or self.ids.descripcionMantenimiento.text=="":
             self.ids.datosIncompletosMantenimiento.text="Ingrese todos los datos"
+        elif Tacometro.validarTacometro(Tacometro,int(self.ids.kilometrosMantenimiento.text), idVehiculo):
+            self.ids.datosIncompletosMantenimiento.text="Esos kilometros ya fueron registrados debe ser superior"
         else:
+
+            km = self.ids.kilometrosMantenimiento.text
+            descripcion = self.ids.descripcionMantenimiento.text
+            precio = self.ids.precioMantenimiento.text
+            Mantenimiento.makeMantenimiento(Mantenimiento,idVehiculo,descripcion, km, precio)
+
             self.ids.datosIncompletosMantenimiento.text=""
             box=BoxLayout(orientation="horizontal")
             box.add_widget(Label(text=str(time.strftime("%d/%m/%Y"))))
             box.add_widget(Label(text=self.ids.precioMantenimiento.text))
             box.add_widget(Label(text=self.ids.kilometrosMantenimiento.text))
             box.add_widget(Label(text=self.ids.descripcionMantenimiento.text))
+            box.add_widget(Label(text=nombreVehiculo))
             self.ids.contenedorMantenimientos.add_widget(box)
 
     #-----------------------------------PARA CREAR UN REPORTE--------------------------------------

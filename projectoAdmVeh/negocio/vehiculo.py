@@ -74,6 +74,24 @@ class Vehiculo:
         print("id del vehiculo" ,name, "es:", res)
         return res
 
+
+    def getNamevehiculo(self, idv):
+
+        print("obteniendo name del vehiculo:", idv)
+        Session = sessionmaker(bind=self.eng)
+        ses = Session()
+        res = None
+        for id, nombre, in ses.query(_Vehiculo.id, _Vehiculo.nombre):
+            if id == idv:
+                res = nombre
+                break
+
+
+        ses.close()
+        print("nombre del vehiculo" ,idv, "es:", res)
+        return res
+
+
     def addVehiculo(self, nombre, idLineaVehiculo, idCombustible):
 
         print("Añadiendo vehiculo___________:")

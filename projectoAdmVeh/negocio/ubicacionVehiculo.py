@@ -3,6 +3,7 @@ from modelo.BD_ubicacionVehiculo import _UbicacionVehiculo
 from modelo.createDatabase import makeEngine
 from modelo.createDatabase import makeBase
 
+from negocio.vehiculo import Vehiculo
 
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
@@ -50,8 +51,8 @@ class UbicacionVehiculo:
 
     def makeUV(self, id, lat, lon):
 
-        #lat = "0"
-        #lon = "0"
+        lat = "4.6464"
+        lon = "-75.6117"
         print("creando la ubicacion del vehiculo_____")
         Session = sessionmaker(bind=self.eng)
         ses = Session()
@@ -60,3 +61,14 @@ class UbicacionVehiculo:
         ses.commit()
         #res = self.makeVehiculo(self, veh)
         ses.close()
+
+    def obtenerData(self):
+
+        res = []
+        Session = sessionmaker(bind=self.eng)
+        ses = Session()
+        for lat, lon, id, in ses.query(_UbicacionVehiculo.latitud,_UbicacionVehiculo.longitud , _UbicacionVehiculo.idvehiculo ):
+            res.append([id,lat,lon])
+
+        ses.close()
+        return res

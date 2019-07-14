@@ -64,6 +64,7 @@ k=Builder.load_string("""
                 	root.oprimidoBtnAgregarVehiculo()
             Button:
                 text: "GPS"
+                #on_press: root.pasoVentanaGPS(app)
                 on_release:
 
                     root.manager.current = "gps"
@@ -131,8 +132,6 @@ class SecondWindow(Screen):
 		self.vehiculosinapp = []
         #lista de todos los vehiculos
 
-
-
 	def oprimidoBtnAgregarVehiculo(self):
 		self.content = AgregarVehiculo() #Este texto que paso lo captura el stringProperty
 		self.content.bind(on_guardar=self._on_guardar) #segun mi analisis, es para dar el mando de on_answer a _on_answer
@@ -170,18 +169,3 @@ class SecondWindow(Screen):
 			n.add_widget(BotonVehiculo(text=(self.vehiculosinapp[i].nombre)))
 			n.add_widget(BotonUbicacion(text="ubicacion")) #Los ids son iguales y corresponden al nombre del vehiculo
 			n.add_widget(BotonEliminar(text="Eliminar"))
-
-
-			#l.append(n)
-		#l.append(self.ids.contenedorFilas)
-		#print(l) #No entiendo porque se imprimen dos listas
-
-	"""
-	#Esta funcion la dejo por si algo, no funciono para eliminar los botones, pero fue un intento que depronto me sirva en el futuro.
-	def eliminarVehiculo(self, idBoton): #esto es para eliminar los botones asociados a un boxL pero sale raro, creo que es porque meto los
-										 #boxLayout a una lista, o porque el parametr idBoton me lo pasan desde otra clase.
-		#print(idBoton)
-		#self.l[int(idBoton)].clear_widgets()
-		#self.ids.contenedorFilas.remove_widget(self.l[int(idBoton)])
-		#self.l.pop(int(idBoton))
-	"""

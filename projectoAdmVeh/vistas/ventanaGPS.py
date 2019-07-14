@@ -9,6 +9,13 @@ from kivy.uix.label import Label
 import random
 import requests
 
+#import do db
+from db.creator import Creator
+
+#negocio
+from negocio.ubicacionVehiculo import UbicacionVehiculo
+from negocio.vehiculo import Vehiculo
+
 if __name__ == '__main__' and __package__ is None:
     from os import sys, path
     sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
@@ -87,49 +94,41 @@ root = Builder.load_string("""
 		        max: 20
 		        step: 1
 		        value: 10
-		        orientation: 'vertical'
+                orientation: 'vertical'
 
     """)
 
 class VentanaGPS(Screen):
-	listaMarker=[]
-	def __init__(self, **kwargs):
-		super(VentanaGPS, self).__init__(**kwargs)
-		Clock.schedule_once(lambda dt:self.actualizarMarcadores())
+    listaMarker=[]
+    def __init__(self, **kwargs):
+        super(VentanaGPS, self).__init__(**kwargs)
+        Clock.schedule_once(lambda dt:self.actualizarMarcadores())
 
-	def actualizarMarcadores(self): #Muestro los marcadores con las ubicaciones actualizadas en el mapa
-		"""ip_request = requests.get('https://get.geojs.io/v1/ip.json')
-		my_ip = ip_request.json()['ip'] #con mi ip obtengo mi geolocalizacion
-		geo_request = requests.get('https://get.geojs.io/v1/ip/geo/' +my_ip + '.json')
-		geo_data = geo_request.json()
+    def actualizarMarcadores(self):
+        geo_pos = Creator.ConseguirPOS(Creator)
+        self.ids.mapview.center_on(float(geo_pos['latitude']), float(geo_pos['longitude']))
 
-		self.ids.mapview.center_on(float(geo_data['latitude']), float(geo_data['longitude'])) #mapa centrado en ubicacion actual
+        if len(self.listaMarker)>0:
+            for marker in range(len(self.listaMarker)):
+                self.ids.mapview.remove_widget(self.listaMarker[marker])
+            self.listaMarker=[]
 
-		mapmarkerpopup=MapMarkerPopup(lat= float(geo_data['latitude']),lon= float(geo_data['longitude']), popup_size= (120,70))
-		bubble=Bubble()
-		label= Label(text= "[b]Ubicaion actual![/b]", markup= True, halign= "center")
-		bubble.add_widget(label)
-		mapmarkerpopup.add_widget(bubble) #creo un marcador con etique para saber la ubicacion actual, es de color rojo"""
+        #hacer consulta base de datos
+        pos = UbicacionVehiculo.obtenerData(UbicacionVehiculo)
+        for e in pos:
+            mapmarkerpopup=MapMarkerPopup(lat=float(e[1]), lon=float(e[2]), color=(0,1,1,1), popup_size= (120,70))
+            bubble=Bubble()
+            label= Label(text= "[b]" + Vehiculo.getNamevehiculo(Vehiculo, e[0]) +  "[/b]", markup= True, halign= "center")
+            bubble.add_widget(label)
+            mapmarkerpopup.add_widget(bubble)
+            self.listaMarker.append(mapmarkerpopup)
+        for i in range(len(pos)):
+            self.ids.mapview.add_widget(self.listaMarker[i])
 
 
-		if len(self.listaMarker)>0:
-		    for marker in range(len(self.listaMarker)):
-		        self.ids.mapview.remove_widget(self.listaMarker[marker])
-		    self.listaMarker=[] #La reseteo para poder meter los mapMarker de los vehiculos actualizados.
 
-		#Se hace la consulta a la BD para obtener las lat y lon de los vehiculos-----------------------BD
-		#self.listaMarker.append(mapmarkerpopup)
-		for l in range(10):
-			mapmarkerpopup=MapMarkerPopup(lat=random.randint(1, 5), lon=-75.7043800+l/2, color=(0,1,1,1), popup_size= (120,70))
-			bubble=Bubble()
-			label= Label(text= "[b]Ubicaion actual![/b]", markup= True, halign= "center")
-			bubble.add_widget(label)
-			mapmarkerpopup.add_widget(bubble)
-			self.listaMarker.append(mapmarkerpopup)
-		for i in range(10):
-		    self.ids.mapview.add_widget(self.listaMarker[i])
 
-	def eliminarMarcadores(self): #al presionar restaurantes o parqueaderos, borro los marcadores del mapa
-		for marker in range(len(self.listaMarker)):
-			self.ids.mapview.remove_widget(self.listaMarker[marker])
-		self.listaMarker=[]
+    def eliminarMarcadores(self): #al presionar restaurantes o parqueaderos, borro los marcadores del mapa
+        for marker in range(len(self.listaMarker)):
+            self.ids.mapview.remove_widget(self.listaMarker[marker])
+        self.listaMarker=[]

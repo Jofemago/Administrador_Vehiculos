@@ -13,7 +13,7 @@ class _Recarga(Base):
 
     id = Column(Integer, primary_key = True)
     precioCombustible = Column(Integer)#foreing key
-    valorRecarga = Column(Integer)
+    #valorRecarga = Column(Integer)
     fecha = Column(Date)
     idTacometro = Column(Integer)
     idVehiculo = Column(Integer)

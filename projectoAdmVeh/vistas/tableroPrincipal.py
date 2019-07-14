@@ -14,6 +14,9 @@ from vistas.verAlarmas import VerAlarmas
 #import from db
 from db.creator import Creator
 
+#import from negocio
+from negocio.recarga import Recarga
+
 Builder.load_string("""
 #:import time time
 
@@ -340,11 +343,18 @@ class TableroPrincipal(Screen):
             n.add_widget(Label(text="Kilometros"+str(i)))
 
     def agregarRecarga(self):
+
+        #obtener el nombre del vehiculo
+        c = Creator()
+        filejson = c.makeConfigJSON()
+        nombreVehiculo = filejson["nameVehicule"]
+
         if self.ids.precioRecarga.text=="" or self.ids.kilometrosRecarga.text=="":
             self.ids.datosIncompletosRecarga.text="Ingrese todos los datos"
         else:
             self.ids.datosIncompletosRecarga.text=""
 
+            Recarga.makeRecarga(Recarga, nombreVehiculo,self.ids.precioRecarga.text, self.ids.kilometrosRecarga.text)
 
             box=BoxLayout(orientation="horizontal")
             box.add_widget(Label(text=str(time.strftime("%d/%m/%Y"))))

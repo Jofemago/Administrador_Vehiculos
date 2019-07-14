@@ -43,7 +43,7 @@ class Tacometro:
     def addTacometro(self, idVehiculo, valorTacometro):
 
         print("AGREGANDO VALOR AL TACOMETRO________")
-        newid= self.getIdMax(self,idVehiculo)
+        newid= self.getIdMax(self)
         print("nuevo id tacometro:", newid)
         tac = _Tacometro(id = newid, idVehiculo = idVehiculo, valorTacometro = valorTacometro)
         res = None
@@ -56,7 +56,7 @@ class Tacometro:
 
         return res
 
-    def getIdMax(self, idvehiculo):
+    def getIdMax(self):
 
         print("obteniendo id maximo de tacometro para un vehiculo")
         Session = sessionmaker(bind=self.eng)

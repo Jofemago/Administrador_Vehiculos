@@ -71,6 +71,7 @@ class Vehiculo:
 
 
         ses.close()
+        print("id del vehiculo" ,name, "es:", res)
         return res
 
     def addVehiculo(self, nombre, idLineaVehiculo, idCombustible):

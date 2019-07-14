@@ -17,6 +17,7 @@ from db.creator import Creator
 from negocio.tipoVehiculo import TipoVehiculo
 from negocio.vehiculo import Vehiculo
 from negocio.tacometro import Tacometro
+from negocio.recarga import Recarga
 
 """
 Los botones de vehiculo, Ubicacion y Eliminar los implemento como clases aparte, esto con el objeto de poder obtener la instancia de cada
@@ -117,6 +118,8 @@ class BotonEliminar(Button):
         print("VEHICULO ID, eliminando.................:", nombre , idvehiculo )
         Vehiculo.deleteVehiculo(Vehiculo,nombre)
         Tacometro.eliminarByVehiculo(Tacometro, idvehiculo)
+        Recarga.eliminarByVehiculo(Recarga, idvehiculo)
+
         #aqui eliminar las recargas, los mantenimientos, las ubicacionnes, tacometros que tengan el id del vehiculo
         self.parent.parent.remove_widget(self.parent)
 

@@ -1,6 +1,6 @@
 {
-    "mail": "jofemago@utp.edu.co",
-    "nameVehicule": null,
-    "init": true,
-    "mailvalidate": true
+    "mailvalidate": true,
+    "mail": "uno",
+    "nameVehicule": "dos",
+    "init": true
 }

@@ -6,7 +6,7 @@ from modelo.createDatabase import makeDatabase
 from modelo.createDatabase import makeBase
 #from modelo.BD_tipoVehiculo import makeTable as makeTableVehiculo
 
-
+import requests
 from modelo import BD_tipoVehiculo, BD_marcaVehiculo,BD_lineaVehiculo
 from modelo import BD_combustible, BD_vehiculo, BD_tacometro, BD_ubicacionVehiculo, BD_recarga,BD_mantenimiento
 #from modelo import makeAllTables
@@ -33,6 +33,15 @@ class Creator():
             config = json.load(f)
         f.close()
         return config
+
+    def ConseguirPOS(self):
+
+        ip_request = requests.get('https://get.geojs.io/v1/ip.json')
+        my_ip = ip_request.json()['ip']
+        geo_request = requests.get('https://get.geojs.io/v1/ip/geo/' +my_ip + '.json')
+        geo_data = geo_request.json()
+
+        return geo_data
 
 
     def writeConfigJson(self, config):

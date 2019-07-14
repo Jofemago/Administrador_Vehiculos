@@ -19,6 +19,7 @@ from negocio.vehiculo import Vehiculo
 from negocio.tacometro import Tacometro
 from negocio.recarga import Recarga
 from negocio.mantenimiento import Mantenimiento
+from negocio.ubicacionVehiculo import UbicacionVehiculo
 
 """
 Los botones de vehiculo, Ubicacion y Eliminar los implemento como clases aparte, esto con el objeto de poder obtener la instancia de cada
@@ -96,17 +97,13 @@ class BotonUbicacion(Button):
         print ("ubicar vehiculo", nombre)#bd
         print("id vehiculo: ", Vehiculo.getIdvehiculo(Vehiculo, nombre))
 
-        """
-        #lo que hizo pareja
-        ip_request = requests.get('https://get.geojs.io/v1/ip.json')
-        my_ip = ip_request.json()['ip']
-        geo_request = requests.get('https://get.geojs.io/v1/ip/geo/' +my_ip + '.json')
-        geo_data = geo_request.json()
-
+        idv = Vehiculo.getIdvehiculo(Vehiculo, nombre)
+        geo_data = Creator.ConseguirPOS(Creator)
+        UbicacionVehiculo.actualizarUbicacion(UbicacionVehiculo,idv, geo_data['latitude'], geo_data['longitude'] )
         #Agregar ubicacion DB
-        print(self.parent.children[2].text) #Para obtener el nombre del vehiculo.
-        print(geo_data['latitude'], geo_data['longitude'])
-        """
+        #print(self.parent.children[2].text) #Para obtener el nombre del vehiculo.
+        #print(geo_data['latitude'], geo_data['longitude'])
+
         self.popup = Popup(title="ESTADO",content=Label(text="Ubicacion guardada correctamente"),size_hint=(0.7, 0.2))
         self.popup.open()
 
@@ -121,6 +118,7 @@ class BotonEliminar(Button):
         Tacometro.eliminarByVehiculo(Tacometro, idvehiculo)
         Recarga.eliminarByVehiculo(Recarga, idvehiculo)
         Mantenimiento.eliminarByVehiculo(Mantenimiento, idvehiculo)
+        UbicacionVehiculo.eliminarByVehiculo(UbicacionVehiculo, idvehiculo)
 
         #aqui eliminar las recargas, los mantenimientos, las ubicacionnes, tacometros que tengan el id del vehiculo
         self.parent.parent.remove_widget(self.parent)

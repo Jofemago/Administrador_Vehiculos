@@ -10,6 +10,10 @@ from negocio.lineaVehiculo import LineaVehiculo
 from negocio.combustible import Combustible
 from negocio.vehiculo import Vehiculo
 from negocio.tacometro import Tacometro
+from negocio.ubicacionVehiculo import UbicacionVehiculo
+
+#import to db
+from db.creator import Creator
 
 class AgregarVehiculo(Screen):
 	def __init__(self, **kwargs):
@@ -103,6 +107,11 @@ class AgregarVehiculo(Screen):
 				veh = Vehiculo.addVehiculo(Vehiculo, self.nombre, self.lineaSelect.id, self.combustible.id)
 				print("TIPO DEL KILOMETRAJE", type(self.kilometraje))
 				Tacometro.addTacometro(Tacometro, veh.id,int(self.kilometraje))
+
+				#aqui agrego la latitud y longitud a la table de geolocaclizacion
+				geopos = Creator.ConseguirPOS(Creator)
+				UbicacionVehiculo.makeUV(UbicacionVehiculo, veh.id, geopos['latitude'],geopos['longitude'] )
+
 				return [True, nombreVehiculo , veh]
 
 

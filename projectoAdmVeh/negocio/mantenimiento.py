@@ -63,6 +63,10 @@ class Mantenimiento:
         print("CREANDO MANENIMIENTO")
         print("ID DE VEHICULO", idVeh)
         fecha = datetime.date.today()
+        #fechastr = "20/5/2018"
+        #fecha = datetime.datetime.strptime(fechastr, "%d/%m/%Y").date()
+
+
         kms = int(km)
         precio = int(precioM)
         idtacometro =Tacometro.getIdMax(Tacometro)
@@ -79,3 +83,19 @@ class Mantenimiento:
         ses.commit()
         #res = self.makeTacometro(self, tac)
         ses.close()
+
+
+    def getAllMtos(self,datei, datef, idv):
+        print("solitando recargas para informe")
+        Session = sessionmaker(bind=self.eng)
+        ses = Session()
+
+        res = []
+
+        #DBSession.query(User).filter(User.birthday.between('1985-01-17', '1988-01-17'))
+        for row in ses.query(_Mantenimiento).filter(_Mantenimiento.fecha.between(datei,datef)).filter(_Mantenimiento.idVehiculo == idv):
+            #aux = [row.fecha, row.precioCombustible, ]
+            res.append([row.id, row.precioMantenimiento, row.descripcion ,str(row.fecha),row.idTacometro ,row.idVehiculo])
+
+        ses.close()
+        return res

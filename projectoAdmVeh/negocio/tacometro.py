@@ -76,6 +76,20 @@ class Tacometro:
         ses.close()
         print("valores de tacometro registrado_________",l)
         return l[-1]
+    def getValorTacByID(self, idR):
+
+        res = 0
+        Session = sessionmaker(bind=self.eng)
+        ses = Session()
+        for row in ses.query(_Tacometro):
+            if row.id == idR:
+                res = row.valorTacometro
+                break
+
+
+        ses.close()
+        return res
+
 
     def getIdMax(self):
 

@@ -55,6 +55,8 @@ class Recarga:
         newid = self.getIdMax(self)
         preciorecarga = int(precioCombustible)
         fecha = datetime.date.today()
+        #fechastr = "20/5/2019"
+        #fecha = datetime.datetime.strptime(fechastr, "%d/%m/%Y").date()
         #meterfechas para ahcer pruebas cuando se liste para el informe
         idtacometro =Tacometro.getIdMax(Tacometro)
         kms = int(kilometraje)
@@ -72,6 +74,21 @@ class Recarga:
         ses.commit()
         #res = self.makeTacometro(self, tac)
         ses.close()
+
+    def getAllRecargas(self,datei, datef, idv):
+        print("solitando recargas para informe")
+        Session = sessionmaker(bind=self.eng)
+        ses = Session()
+
+        res = []
+
+        #DBSession.query(User).filter(User.birthday.between('1985-01-17', '1988-01-17'))
+        for row in ses.query(_Recarga).filter(_Recarga.fecha.between(datei,datef)).filter(_Recarga.idVehiculo == idv):
+            #aux = [row.fecha, row.precioCombustible, ]
+            res.append([row.id, row.precioCombustible, str(row.fecha),row.idTacometro ,row.idVehiculo])
+
+        ses.close()
+        return res
 
     def getIdMax(self):
 

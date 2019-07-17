@@ -220,7 +220,8 @@ Builder.load_string("""
                         spacing: 20
                         Button:
                             text: "Aceptar"
-                            #on_press:
+                            on_press:
+                                root.enviarReporte()
                         Button:
                             text: "Regresar"
                             on_press:
@@ -412,88 +413,174 @@ class TableroPrincipal(Screen):
     #-----------------------------------PARA CREAR UN REPORTE--------------------------------------
     def crearReporte(self):
         validarFecha=True
-        fechai = None
-        fechaf = None
+        fechai = 0
+        fechaf = -1
+        c = Creator()
+        filejson = c.makeConfigJSON()
+        nombreVehiculo = filejson["nameVehicule"]
+        idVehiculo = Vehiculo.getIdvehiculo(Vehiculo, nombreVehiculo)
         try:
-           fechai = datetime.datetime.strptime(self.ids.fechaInicial.text, "%d/%m/%Y").date()
-           fechaf = datetime.datetime.strptime(self.ids.fechaFinal.text, "%d/%m/%Y").date()
+            fechai = datetime.strptime(self.ids.fechaInicial.text, "%d/%m/%Y").date()
+            fechaf = datetime.strptime(self.ids.fechaFinal.text, "%d/%m/%Y").date()
         except:
-           validarFecha=False #si la fecha esta mal
-           print("entramos a la excepcion")
+            validarFecha=False #si la fecha esta mal
+            print("entramos a la excepcion")
         if self.ids.tipoReporte.text=="Tipo de reporte" or self.ids.fechaInicial.text=="" or self.ids.fechaFinal.text=="":
             self.ids.advertenciaResporte.text="Complete todos los datos"
         elif fechai > fechaf:
             self.ids.advertenciaResporte.text="fechas invalidas"
         elif validarFecha:
-        	self.ids.advertenciaResporte.text=""
-        	print("Creando reporte")
-        	#aca se listan los elementos correspondientes al reporte seleccionado---------->consulta DB
+            self.ids.advertenciaResporte.text=""
+            print("Creando reporte")
+            if self.ids.tipoReporte.text=="Reporte de recargas":
+                self.ids.elegirListaReporte.clear_widgets() #Se elimina toda la lista del reporte elegido anteriormente
+                nombreColumnas=BoxLayout(size_hint_y=0.1) #Box con los nombres de cada columna
+                scrollReportes=ScrollView()
+                gridReportes=GridLayout(cols=1, size_hint_y=None, row_default_height=self.height*0.1) #Va a contener todas las filas del repo
+                gridReportes.bind(minimum_height=gridReportes.setter('height')) #es para que el scroll se pueda mover.
+                columna= Label(text="Fecha Recarga", color=(1,1,0,1))
+                nombreColumnas.add_widget(columna)
+                columna= Label(text="Precio Recarga", color=(1,0,1,1))
+                nombreColumnas.add_widget(columna)
+                columna= Label(text="Kilometros Recorridos", color=(0,0,1,1))
+                nombreColumnas.add_widget(columna)#;Recarga.getAllRecargas(Recarga, fechai, fechaf)
+                rec = Recarga.getAllRecargas(Recarga, fechai, fechaf, idVehiculo)
 
-        	#Creo la lista de reportes para las Recargas----------->DB
-        	if self.ids.tipoReporte.text=="Reporte de recargas":
-        		self.ids.elegirListaReporte.clear_widgets() #Se elimina toda la lista del reporte elegido anteriormente
-        		nombreColumnas=BoxLayout(size_hint_y=0.1) #Box con los nombres de cada columna
-        		scrollReportes=ScrollView()
-        		gridReportes=GridLayout(cols=1, size_hint_y=None, row_default_height=self.height*0.1) #Va a contener todas las filas del repo
-        		gridReportes.bind(minimum_height=gridReportes.setter('height')) #es para que el scroll se pueda mover.
-	        	columna= Label(text="Fecha Recarga", color=(1,1,0,1))
-	        	nombreColumnas.add_widget(columna)
-	        	columna= Label(text="Precio Recarga", color=(1,0,1,1))
-	        	nombreColumnas.add_widget(columna)
-	        	columna= Label(text="Kilometros Recorridos", color=(0,0,1,1))
-	        	nombreColumnas.add_widget(columna)
-	        	for i in range(10):
-		            gridReportes.add_widget(BoxLayout(orientation="horizontal"))
-		        for i, n in enumerate(gridReportes.children):
-		            n.add_widget(Label(text=str(time.strftime("%d/%m/%Y"))))
-		            n.add_widget(Label(text="Precio"+str(i)))
-		            n.add_widget(Label(text="Kilometros"+str(i)))
-		    #Creo la lista de reportes para los Mantenimientos----------->DB
-	        elif self.ids.tipoReporte.text=="Reporte de mantenimiento":
-	        	self.ids.elegirListaReporte.clear_widgets()
-	        	nombreColumnas=BoxLayout(size_hint_y=0.1)
-        		scrollReportes=ScrollView()
-        		gridReportes=GridLayout(cols=1, size_hint_y=None, row_default_height=self.height*0.1)
-        		gridReportes.bind(minimum_height=gridReportes.setter('height')) #es para que el scroll se pueda mover.
-	        	columna= Label(text="Fecha Mantenimiento", color=(1,1,0,1))
-	        	nombreColumnas.add_widget(columna)
-	        	columna= Label(text="Precio Mantenimiento", color=(1,0,1,1))
-	        	nombreColumnas.add_widget(columna)
-	        	columna= Label(text="Kilometros Recorridos", color=(0,0,1,1))
-	        	nombreColumnas.add_widget(columna)
-	        	for i in range(10):
-	        		gridReportes.add_widget(BoxLayout(orientation="horizontal"))
-	        	for i, n in enumerate(gridReportes.children):
-	        		n.add_widget(Label(text=str(time.strftime("%d/%m/%Y"))))
-	        		n.add_widget(Label(text="Precio"+str(i)))
-	        		n.add_widget(Label(text="Kilometros"+str(i)))
+                for i in range(len(rec)):
+                    gridReportes.add_widget(BoxLayout(orientation="horizontal"))
+                for i, n in enumerate(gridReportes.children):
+                    print("")
+                    n.add_widget(Label(text=  rec[i][2]))
+                    n.add_widget(Label(text=  str(rec[i][1])))
+                    n.add_widget(Label(text=  str(Tacometro.getValorTacByID(Tacometro,rec[i][3]))))
+            elif self.ids.tipoReporte.text=="Reporte de mantenimiento":
+                self.ids.elegirListaReporte.clear_widgets()
+                nombreColumnas=BoxLayout(size_hint_y=0.1)
+                scrollReportes=ScrollView()
+                gridReportes=GridLayout(cols=1, size_hint_y=None, row_default_height=self.height*0.1)
+                gridReportes.bind(minimum_height=gridReportes.setter('height')) #es para que el scroll se pueda mover.
+                columna= Label(text="Fecha Mantenimiento", color=(1,1,0,1))
+                nombreColumnas.add_widget(columna)
+                columna= Label(text="Precio Mantenimiento", color=(1,0,1,1))
+                nombreColumnas.add_widget(columna)
+                columna= Label(text="Kilometros Recorridos", color=(0,0,1,1))
+                nombreColumnas.add_widget(columna)
+
+                mto = Mantenimiento.getAllMtos(Mantenimiento, fechai, fechaf,idVehiculo)
+                for i in range(len(mto)):
+                    gridReportes.add_widget(BoxLayout(orientation="horizontal"))
+                for i, n in enumerate(gridReportes.children):
+                    n.add_widget(Label(text= mto[i][3] ))
+                    n.add_widget(Label(text= str(mto[i][1]) ))
+                    n.add_widget(Label(text= str(Tacometro.getValorTacByID(Tacometro,mto[i][4] ))))
 	        #Creo la lista de reportes para la huella de carbono----------->DB
-        	elif self.ids.tipoReporte.text=="Reportes de huella de carbono":
-        		self.ids.elegirListaReporte.clear_widgets()
-        		nombreColumnas=BoxLayout(size_hint_y=0.1)
-        		scrollReportes=ScrollView()
-        		gridReportes=GridLayout(cols=1, size_hint_y=None, row_default_height=self.height*0.1)
-        		gridReportes.bind(minimum_height=gridReportes.setter('height')) #es para que el scroll se pueda mover.
-        		columna= Label(text="Fecha Recarga Comb", color=(1,1,0,1))
-        		nombreColumnas.add_widget(columna)
-        		columna= Label(text="Cantidad combustible", color=(1,0,1,1))
-        		nombreColumnas.add_widget(columna)
-        		columna= Label(text="Huella Carbono (gr)", color=(0,0,1,1))
-        		nombreColumnas.add_widget(columna)
-        		for i in range(10):
-        			gridReportes.add_widget(BoxLayout(orientation="horizontal"))
-        		for i, n in enumerate(gridReportes.children):
-        			n.add_widget(Label(text=str(time.strftime("%d/%m/%Y"))))
-        			n.add_widget(Label(text="cantidad"+str(i)))
-        			n.add_widget(Label(text="huella"+str(i)))
+            elif self.ids.tipoReporte.text=="Reportes de huella de carbono":
+                self.ids.elegirListaReporte.clear_widgets()
+                nombreColumnas=BoxLayout(size_hint_y=0.1)
+                scrollReportes=ScrollView()
+                gridReportes=GridLayout(cols=1, size_hint_y=None, row_default_height=self.height*0.1)
+                gridReportes.bind(minimum_height=gridReportes.setter('height')) #es para que el scroll se pueda mover.
+                columna= Label(text="Fecha Recarga Comb", color=(1,1,0,1))
+                nombreColumnas.add_widget(columna)
+                columna= Label(text="Cantidad combustible", color=(1,0,1,1))
+                nombreColumnas.add_widget(columna)
+                columna= Label(text="Huella Carbono (gr)", color=(0,0,1,1))
+                nombreColumnas.add_widget(columna)
+                for i in range(10):
+                    gridReportes.add_widget(BoxLayout(orientation="horizontal"))
+                for i, n in enumerate(gridReportes.children):
+                    n.add_widget(Label(text=str(time.strftime("%d/%m/%Y"))))
+                    n.add_widget(Label(text="cantidad"+str(i)))
+                    n.add_widget(Label(text="huella"+str(i)))
 
-        	self.ids.elegirListaReporte.add_widget(nombreColumnas)
-        	scrollReportes.add_widget(gridReportes)
-        	self.ids.elegirListaReporte.add_widget(scrollReportes)
+            self.ids.elegirListaReporte.add_widget(nombreColumnas)
+            scrollReportes.add_widget(gridReportes)
+            self.ids.elegirListaReporte.add_widget(scrollReportes)
 
         else:
         	self.ids.advertenciaResporte.text="No ha ingresado una fecha correcta..."
         	validarFecha=True
+
+    #------------------------------para mandar reportes-------------------
+    def enviarReporte(self):
+
+        c = Creator()
+        filejson = c.makeConfigJSON()
+        nombreVehiculo = filejson["nameVehicule"]
+        idVehiculo = Vehiculo.getIdvehiculo(Vehiculo, nombreVehiculo)
+
+
+        #self.ids.correopantalla.text = filejson["mail"]
+        import csv
+        import smtplib
+        import mimetypes
+
+        # Importamos los módulos necesarios
+        from email.mime.multipart import MIMEMultipart
+        from email.mime.text import MIMEText
+        from email.encoders import encode_base64
+
+        fechai = 0
+        fechaf = -1
+        validarFecha = True
+        try:
+            fechai = datetime.strptime(self.ids.fechaInicial.text, "%d/%m/%Y").date()
+            fechaf = datetime.strptime(self.ids.fechaFinal.text, "%d/%m/%Y").date()
+        except:
+            validarFecha=False #si la fecha esta mal
+            print("entramos a la excepcion")
+
+        if fechai > fechaf:
+            self.ids.advertenciaResporte.text="fechas invalidas"
+        elif validarFecha:
+            self.ids.advertenciaResporte.text=""
+            mto = Mantenimiento.getAllMtos(Mantenimiento, fechai, fechaf,idVehiculo)
+            rec = Recarga.getAllRecargas(Recarga, fechai, fechaf, idVehiculo)
+            f=open("reporteVehiculo.csv", "w")
+            f.close()
+            with open('reporteVehiculo.csv', 'w') as csvfile:
+                spamwriter = csv.writer(csvfile, delimiter=' ',
+                                        quotechar='|', quoting=csv.QUOTE_MINIMAL)
+                spamwriter.writerow(['Recargas del Vehiculo'])
+                spamwriter.writerow(['Fecha', 'Precio', 'Kilometros recorridos'])
+                for i in range(len(rec)):
+                    #spamwriter.writerow(['Fecha'+str(i)]+ ['Precio'+str(i)]+ ['Kilometros recorridos'+str(i)])
+                    spamwriter.writerow( [[rec[i][2] ] + [   str(rec[i][1]) ]  + [  str(Tacometro.getValorTacByID(Tacometro,rec[i][3])) ]])
+                spamwriter.writerow(['Mantenimientos del Vehiculo'])
+                spamwriter.writerow(['Fecha', 'Precio', 'Kilometros recorridos', 'Descripcion'])
+                for i in range(len(mto)):
+                    #spamwriter.writerow(['Fecha'+str(i)]+ ['Precio'+str(i)]+ ['Kilometros recorridos'+str(i)])
+                    spamwriter.writerow([ [  mto[i][3] ] + [str(mto[i][1]) ] + [str(Tacometro.getValorTacByID(Tacometro,mto[i][4] )) ] + [mto[i][2] ]])
+
+
+            # Creamos objeto Multipart, quien será el recipiente que enviaremos
+            msg = MIMEMultipart()
+            msg['From']="laboratoriodesw@gmail.com"
+            msg['To'] = self.ids.correopantalla.text
+            msg['Subject']="Reporte del vehiculo: " +  nombreVehiculo
+
+            # Adjuntamos Imagen
+            file = open("reporteVehiculo.csv", "r")
+            attach_image = MIMEText(file.read())
+            attach_image.add_header('Content-Disposition', 'attachment; filename = "reporteVehiculo.csv"')
+            msg.attach(attach_image)
+
+            # Autenticamos
+            mailServer = smtplib.SMTP('smtp.gmail.com',587)
+            mailServer.ehlo()
+            mailServer.starttls()
+            mailServer.ehlo()
+            mailServer.login("laboratoriodesw@gmail.com","laboratoriodesw20191")
+
+            # Enviamos
+            mailServer.sendmail("laboratoriodesw@gmail.com", self.ids.correopantalla.text, msg.as_string())
+
+            # Cerramos conexión
+            mailServer.close()
+
+
+
+
     #-----------------------------------PARA VER ALARMAS--------------------------------------------
 
     def on_time(self,*args):

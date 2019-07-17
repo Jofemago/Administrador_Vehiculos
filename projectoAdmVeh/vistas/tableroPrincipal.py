@@ -412,13 +412,18 @@ class TableroPrincipal(Screen):
     #-----------------------------------PARA CREAR UN REPORTE--------------------------------------
     def crearReporte(self):
         validarFecha=True
+        fechai = None
+        fechaf = None
         try:
-           datetime.strptime(self.ids.fechaInicial.text, '%d/%m/%Y') #Verifico que la fecha sea correcta.
-           datetime.strptime(self.ids.fechaFinal.text, '%d/%m/%Y')
+           fechai = datetime.datetime.strptime(self.ids.fechaInicial.text, "%d/%m/%Y").date()
+           fechaf = datetime.datetime.strptime(self.ids.fechaFinal.text, "%d/%m/%Y").date()
         except:
            validarFecha=False #si la fecha esta mal
+           print("entramos a la excepcion")
         if self.ids.tipoReporte.text=="Tipo de reporte" or self.ids.fechaInicial.text=="" or self.ids.fechaFinal.text=="":
             self.ids.advertenciaResporte.text="Complete todos los datos"
+        elif fechai > fechaf:
+            self.ids.advertenciaResporte.text="fechas invalidas"
         elif validarFecha:
         	self.ids.advertenciaResporte.text=""
         	print("Creando reporte")

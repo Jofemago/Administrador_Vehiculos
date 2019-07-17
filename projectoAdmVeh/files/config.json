@@ -1,6 +1,6 @@
 {
-    "mailvalidate": false,
+    "mailvalidate": true,
     "init": true,
-    "mail": "",
-    "nameVehicule": null
+    "mail": "jofemago@utp.edu.co",
+    "nameVehicule": "jofemago"
 }

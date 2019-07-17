@@ -68,7 +68,7 @@ class Mantenimiento:
         idtacometro =Tacometro.getIdMax(Tacometro)
         newid = Mantenimiento.getIdMax(Mantenimiento)
 
-        #Tacometro.addTacometro(Tacometro, idVeh, kms)
+        Tacometro.addTacometro(Tacometro, idVeh, kms)
 
         Session = sessionmaker(bind=self.eng)
         ses = Session()

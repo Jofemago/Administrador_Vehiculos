@@ -1,6 +1,8 @@
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.scrollview import ScrollView
 from kivy.uix.popup import Popup
 from kivy.lang import Builder
 
@@ -200,8 +202,8 @@ Builder.load_string("""
                             hint_text: "Fecha final (dd/mm/aa)"
                             multiline: False
                 BoxLayout:
-                    TextInput:
-                        text: "DETALLES DEL REPORTE\\n\\n"
+                    id: elegirListaReporte
+                    orientation: "vertical"
 
                 BoxLayout:
                     orientation: "vertical"
@@ -218,6 +220,7 @@ Builder.load_string("""
                         spacing: 20
                         Button:
                             text: "Aceptar"
+                            #on_press:
                         Button:
                             text: "Regresar"
                             on_press:
@@ -388,7 +391,7 @@ class TableroPrincipal(Screen):
 
         if self.ids.precioMantenimiento.text=="" or self.ids.kilometrosMantenimiento.text=="" or self.ids.descripcionMantenimiento.text=="":
             self.ids.datosIncompletosMantenimiento.text="Ingrese todos los datos"
-        elif Tacometro.validarTacometro(Tacometro,int(self.ids.kilometrosMantenimiento.text), idVehiculo):
+        elif Tacometro.validarTacometro2(Tacometro,int(self.ids.kilometrosMantenimiento.text), idVehiculo):
             self.ids.datosIncompletosMantenimiento.text="Esos kilometros ya fueron registrados debe ser superior"
         else:
 
@@ -410,16 +413,82 @@ class TableroPrincipal(Screen):
     def crearReporte(self):
         validarFecha=True
         try:
-               datetime.strptime(self.ids.fechaInicial.text, '%d/%m/%Y') #Verifico que la fecha sea correcta.
-               datetime.strptime(self.ids.fechaFinal.text, '%d/%m/%Y')
+           datetime.strptime(self.ids.fechaInicial.text, '%d/%m/%Y') #Verifico que la fecha sea correcta.
+           datetime.strptime(self.ids.fechaFinal.text, '%d/%m/%Y')
         except:
            validarFecha=False #si la fecha esta mal
         if self.ids.tipoReporte.text=="Tipo de reporte" or self.ids.fechaInicial.text=="" or self.ids.fechaFinal.text=="":
             self.ids.advertenciaResporte.text="Complete todos los datos"
-        elif not validarFecha:
-            self.ids.advertenciaResporte.text="No ha ingresado una fecha correcta..."
+        elif validarFecha:
+        	self.ids.advertenciaResporte.text=""
+        	print("Creando reporte")
+        	#aca se listan los elementos correspondientes al reporte seleccionado---------->consulta DB
+
+        	#Creo la lista de reportes para las Recargas----------->DB
+        	if self.ids.tipoReporte.text=="Reporte de recargas":
+        		self.ids.elegirListaReporte.clear_widgets() #Se elimina toda la lista del reporte elegido anteriormente
+        		nombreColumnas=BoxLayout(size_hint_y=0.1) #Box con los nombres de cada columna
+        		scrollReportes=ScrollView()
+        		gridReportes=GridLayout(cols=1, size_hint_y=None, row_default_height=self.height*0.1) #Va a contener todas las filas del repo
+        		gridReportes.bind(minimum_height=gridReportes.setter('height')) #es para que el scroll se pueda mover.
+	        	columna= Label(text="Fecha Recarga", color=(1,1,0,1))
+	        	nombreColumnas.add_widget(columna)
+	        	columna= Label(text="Precio Recarga", color=(1,0,1,1))
+	        	nombreColumnas.add_widget(columna)
+	        	columna= Label(text="Kilometros Recorridos", color=(0,0,1,1))
+	        	nombreColumnas.add_widget(columna)
+	        	for i in range(10):
+		            gridReportes.add_widget(BoxLayout(orientation="horizontal"))
+		        for i, n in enumerate(gridReportes.children):
+		            n.add_widget(Label(text=str(time.strftime("%d/%m/%Y"))))
+		            n.add_widget(Label(text="Precio"+str(i)))
+		            n.add_widget(Label(text="Kilometros"+str(i)))
+		    #Creo la lista de reportes para los Mantenimientos----------->DB
+	        elif self.ids.tipoReporte.text=="Reporte de mantenimiento":
+	        	self.ids.elegirListaReporte.clear_widgets()
+	        	nombreColumnas=BoxLayout(size_hint_y=0.1)
+        		scrollReportes=ScrollView()
+        		gridReportes=GridLayout(cols=1, size_hint_y=None, row_default_height=self.height*0.1)
+        		gridReportes.bind(minimum_height=gridReportes.setter('height')) #es para que el scroll se pueda mover.
+	        	columna= Label(text="Fecha Mantenimiento", color=(1,1,0,1))
+	        	nombreColumnas.add_widget(columna)
+	        	columna= Label(text="Precio Mantenimiento", color=(1,0,1,1))
+	        	nombreColumnas.add_widget(columna)
+	        	columna= Label(text="Kilometros Recorridos", color=(0,0,1,1))
+	        	nombreColumnas.add_widget(columna)
+	        	for i in range(10):
+	        		gridReportes.add_widget(BoxLayout(orientation="horizontal"))
+	        	for i, n in enumerate(gridReportes.children):
+	        		n.add_widget(Label(text=str(time.strftime("%d/%m/%Y"))))
+	        		n.add_widget(Label(text="Precio"+str(i)))
+	        		n.add_widget(Label(text="Kilometros"+str(i)))
+	        #Creo la lista de reportes para la huella de carbono----------->DB
+        	elif self.ids.tipoReporte.text=="Reportes de huella de carbono":
+        		self.ids.elegirListaReporte.clear_widgets()
+        		nombreColumnas=BoxLayout(size_hint_y=0.1)
+        		scrollReportes=ScrollView()
+        		gridReportes=GridLayout(cols=1, size_hint_y=None, row_default_height=self.height*0.1)
+        		gridReportes.bind(minimum_height=gridReportes.setter('height')) #es para que el scroll se pueda mover.
+        		columna= Label(text="Fecha Recarga Comb", color=(1,1,0,1))
+        		nombreColumnas.add_widget(columna)
+        		columna= Label(text="Cantidad combustible", color=(1,0,1,1))
+        		nombreColumnas.add_widget(columna)
+        		columna= Label(text="Huella Carbono (gr)", color=(0,0,1,1))
+        		nombreColumnas.add_widget(columna)
+        		for i in range(10):
+        			gridReportes.add_widget(BoxLayout(orientation="horizontal"))
+        		for i, n in enumerate(gridReportes.children):
+        			n.add_widget(Label(text=str(time.strftime("%d/%m/%Y"))))
+        			n.add_widget(Label(text="cantidad"+str(i)))
+        			n.add_widget(Label(text="huella"+str(i)))
+
+        	self.ids.elegirListaReporte.add_widget(nombreColumnas)
+        	scrollReportes.add_widget(gridReportes)
+        	self.ids.elegirListaReporte.add_widget(scrollReportes)
+
         else:
-            pass #puedo agregar en la base de datos.
+        	self.ids.advertenciaResporte.text="No ha ingresado una fecha correcta..."
+        	validarFecha=True
     #-----------------------------------PARA VER ALARMAS--------------------------------------------
 
     def on_time(self,*args):

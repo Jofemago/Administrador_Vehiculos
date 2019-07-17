@@ -60,6 +60,10 @@ class Tacometro:
         value = self.getMaxValueByVehiculo(self, idVehiculo)
         return value >= kms
 
+    def validarTacometro2(self, kms, idVehiculo):
+        value = self.getMaxValueByVehiculo(self, idVehiculo)
+        return value > kms
+
     def getMaxValueByVehiculo(self,idVehiculo):
         print("obteniendo el valor maximo en tacometro por vehiculo")
         l = [0]

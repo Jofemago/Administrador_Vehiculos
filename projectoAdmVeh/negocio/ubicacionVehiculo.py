@@ -51,8 +51,8 @@ class UbicacionVehiculo:
 
     def makeUV(self, id, lat, lon):
 
-        lat = "4.6464"
-        lon = "-75.6117"
+        #lat = "4.6464"
+        #lon = "-75.6117"
         print("creando la ubicacion del vehiculo_____")
         Session = sessionmaker(bind=self.eng)
         ses = Session()

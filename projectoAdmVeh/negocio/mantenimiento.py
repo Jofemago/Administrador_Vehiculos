@@ -67,6 +67,9 @@ class Mantenimiento:
         precio = int(precioM)
         idtacometro =Tacometro.getIdMax(Tacometro)
         newid = Mantenimiento.getIdMax(Mantenimiento)
+
+        #Tacometro.addTacometro(Tacometro, idVeh, kms)
+
         Session = sessionmaker(bind=self.eng)
         ses = Session()
         mant = _Mantenimiento(id = newid, precioMantenimiento =precio,

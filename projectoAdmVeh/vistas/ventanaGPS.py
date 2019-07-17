@@ -67,7 +67,7 @@ root = Builder.load_string("""
 			        top: root.top
 			        Button:
 			            text: "Actualizar Vehiculos"
-			            on_release: root.actualizarMarcadores()
+			            on_release: root.visualizarVehiculos()
 			        Button:
 			            text: "Restaurantes"
 			            on_release: root.eliminarMarcadores()
@@ -102,9 +102,9 @@ class VentanaGPS(Screen):
     listaMarker=[]
     def __init__(self, **kwargs):
         super(VentanaGPS, self).__init__(**kwargs)
-        Clock.schedule_once(lambda dt:self.actualizarMarcadores())
+        Clock.schedule_once(lambda dt:self.visualizarVehiculos())
 
-    def actualizarMarcadores(self):
+    def visualizarVehiculos(self):
         geo_pos = Creator.ConseguirPOS(Creator)
         self.ids.mapview.center_on(float(geo_pos['latitude']), float(geo_pos['longitude']))
 

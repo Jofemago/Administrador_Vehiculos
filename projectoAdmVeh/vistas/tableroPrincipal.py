@@ -312,7 +312,7 @@ Builder.load_string("""
                         BoxLayout:
                             Button:
                                 text: "Agregar"
-                                on_release: root.verificarDatosAlarmas()
+                                on_release: root.verificarDatosAlarmas(app)
                     Button:
                         text: "Ver alarmas"
                         on_release:
@@ -598,7 +598,7 @@ class TableroPrincipal(Screen):
     def quitarPopupAlarmas(self, instance):
         self.popup.dismiss()
 
-    def verificarDatosAlarmas(self):
+    def verificarDatosAlarmas(self,app):
         #cadena solo es una prueba, la idea es que con nombreAlarma se compare los otros nombres de alam de la db para que no se repita.
         cadena="hola"
         hora=self.ids.hora.text
@@ -640,4 +640,16 @@ class TableroPrincipal(Screen):
                insertarDatosBD=False #si la fecha esta mal, los datos no son insertados en DB
             #--------------------------------se crea la consulta para meter los siguientes datos a la db.--------------------------
             if insertarDatosBD:
-                print(hora,fecha,nombreAlarma,numeroDias,aPartirDe,recargaOmantenimiento,fijoOperiodico)
+                diaProgramado=aPartirDe[0]+aPartirDe[1]
+                diaActual=fecha[7]+fecha[8]
+                segundosLanzarAlarma=((int(diaProgramado)-int(diaActual))*24*60*60)+5 #Con respecto a la fecha actual
+                #print(int(aPartirDe[0])-int(fecha[0]))
+                Clock.schedule_once(lambda dt:self.sonarAlarma(app, nombreAlarma, recargaOmantenimiento),segundosLanzarAlarma)
+                #print(hora,fecha,nombreAlarma,numeroDias,aPartirDe,recargaOmantenimiento,fijoOperiodico)
+
+    def sonarAlarma(self, app, nombreAlarma, recargaOmantenimiento):
+        ventanaActual=self.manager.current
+        for ventana in app.root.screens:
+            if ventana.name=="alarma":
+                ventana.alarmaActivada(ventanaActual, nombreAlarma, recargaOmantenimiento)
+        self.manager.current="alarma"

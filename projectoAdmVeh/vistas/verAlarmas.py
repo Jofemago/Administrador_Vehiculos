@@ -58,12 +58,7 @@ class VerAlarmas(BoxLayout):
 		Clock.schedule_once(lambda dt:self.listarAlarmas())
 
 	def listarAlarmas(self):
-		fichero = open('./vistas/prueba.txt', 'r')
- 
-		fichero.readline()
-		 
-		fichero.seek(0)
-		for i in range(len(fichero.readlines())):
+		for i in range(10):
 			self.ids.contenedorAlarmas.add_widget(BoxLayout(orientation="horizontal"))
 		for i, n in enumerate(self.ids.contenedorAlarmas.children): 
 			n.add_widget(Label(text="Nombre "+str(i)))                                     

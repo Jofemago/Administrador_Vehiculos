@@ -64,9 +64,8 @@ k=Builder.load_string("""
                 	root.oprimidoBtnAgregarVehiculo()
             Button:
                 text: "GPS"
-                #on_press: root.pasoVentanaGPS(app)
                 on_release:
-
+                    root.pantallas(app)
                     root.manager.current = "gps"
 
 <BotonVehiculo>:
@@ -125,47 +124,50 @@ class BotonEliminar(Button):
         self.parent.parent.remove_widget(self.parent)
 
 class SecondWindow(Screen):
-	#l=[]
-	def __init__(self, **kwargs):
-		super(SecondWindow, self).__init__(**kwargs)
-		Clock.schedule_once(lambda dt:self.scrollVehiculos())
-		self.vehiculosinapp = []
-        #lista de todos los vehiculos
+    def __init__(self, **kwargs):
+    	super(SecondWindow, self).__init__(**kwargs)
+    	Clock.schedule_once(lambda dt:self.scrollVehiculos())
+    	self.vehiculosinapp = []
 
-	def oprimidoBtnAgregarVehiculo(self):
-		self.content = AgregarVehiculo() #Este texto que paso lo captura el stringProperty
-		self.content.bind(on_guardar=self._on_guardar) #segun mi analisis, es para dar el mando de on_answer a _on_answer
-		self.popup = Popup(title="Agregue el vehiculo que desee",
-							content=self.content,
-							size_hint=(0.9, 0.9))
-		self.popup.open()
+    def oprimidoBtnAgregarVehiculo(self):
+    	self.content = AgregarVehiculo() #Este texto que paso lo captura el stringProperty
+    	self.content.bind(on_guardar=self._on_guardar) #segun mi analisis, es para dar el mando de on_answer a _on_answer
+    	self.popup = Popup(title="Agregue el vehiculo que desee",
+    						content=self.content,
+    						size_hint=(0.9, 0.9))
+    	self.popup.open()
 
-	def _on_guardar(self, instance):
-		#print("instance:", instance)
-		resultadoVentanaAgregarVehiculo=self.content.on_guardar() #La pos 0 me determina si los datos de agregarVeh son correctos o no.
-		if resultadoVentanaAgregarVehiculo[0]: #pos que contiene True o False
-			self.vehiculosinapp.append(resultadoVentanaAgregarVehiculo[2])
-			box=BoxLayout(orientation="horizontal")
-			box.add_widget(BotonVehiculo(text=resultadoVentanaAgregarVehiculo[1])) #pos que tiene nombre del vehiculo.
-			box.add_widget(BotonUbicacion(text="ubicacion")) #Los ids son iguales y corresponden al nombre del vehiculo
-			box.add_widget(BotonEliminar(text="Eliminar"))
-			self.ids.contenedorFilas.add_widget(box)
-			self.popup.dismiss()
-		else:
-			pass
+    def pantallas(self,app):
+        for ventana in app.root.screens:
+            if ventana.name=="gps":
+                ventana.visualizarVehiculos() #Para centrar en la posicion actual.
 
-	def scrollVehiculos(self):
-		# CONSULTA BASE DE DATOS PARA LISTAR TODOS LOS VEHICULOS
-		for e in Vehiculo.listarNameVehiculos(Vehiculo):
-			self.vehiculosinapp.append(e)
-		#self.vehiculosinapp.append()
-		for i in range(len(self.vehiculosinapp)):
-			#print(self.vehiculosinapp)
-			#self.l.append(BoxLayout(orientation="horizontal"))
-			#self.ids.contenedorFilas.add_widget(self.l[-1]) #al gridlayout le agrego lo boxlayout necesarios, en cada boxlayout puedo posicionar
-															 #mis tres botones.
-			self.ids.contenedorFilas.add_widget(BoxLayout(orientation="horizontal"))
-		for i, n in enumerate(self.ids.contenedorFilas.children):
-			n.add_widget(BotonVehiculo(text=(self.vehiculosinapp[i].nombre)))
-			n.add_widget(BotonUbicacion(text="ubicacion")) #Los ids son iguales y corresponden al nombre del vehiculo
-			n.add_widget(BotonEliminar(text="Eliminar"))
+    def _on_guardar(self, instance):
+    	#print("instance:", instance)
+    	resultadoVentanaAgregarVehiculo=self.content.on_guardar() #La pos 0 me determina si los datos de agregarVeh son correctos o no.
+    	if resultadoVentanaAgregarVehiculo[0]: #pos que contiene True o False
+    		self.vehiculosinapp.append(resultadoVentanaAgregarVehiculo[2])
+    		box=BoxLayout(orientation="horizontal")
+    		box.add_widget(BotonVehiculo(text=resultadoVentanaAgregarVehiculo[1])) #pos que tiene nombre del vehiculo.
+    		box.add_widget(BotonUbicacion(text="ubicacion")) #Los ids son iguales y corresponden al nombre del vehiculo
+    		box.add_widget(BotonEliminar(text="Eliminar"))
+    		self.ids.contenedorFilas.add_widget(box)
+    		self.popup.dismiss()
+    	else:
+    		pass
+
+    def scrollVehiculos(self):
+    	# CONSULTA BASE DE DATOS PARA LISTAR TODOS LOS VEHICULOS
+    	for e in Vehiculo.listarNameVehiculos(Vehiculo):
+    		self.vehiculosinapp.append(e)
+    	#self.vehiculosinapp.append()
+    	for i in range(len(self.vehiculosinapp)):
+    		#print(self.vehiculosinapp)
+    		#self.l.append(BoxLayout(orientation="horizontal"))
+    		#self.ids.contenedorFilas.add_widget(self.l[-1]) #al gridlayout le agrego lo boxlayout necesarios, en cada boxlayout puedo posicionar
+    														 #mis tres botones.
+    		self.ids.contenedorFilas.add_widget(BoxLayout(orientation="horizontal"))
+    	for i, n in enumerate(self.ids.contenedorFilas.children):
+    		n.add_widget(BotonVehiculo(text=(self.vehiculosinapp[i].nombre)))
+    		n.add_widget(BotonUbicacion(text="ubicacion")) #Los ids son iguales y corresponden al nombre del vehiculo
+    		n.add_widget(BotonEliminar(text="Eliminar"))

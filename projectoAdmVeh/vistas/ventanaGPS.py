@@ -103,13 +103,13 @@ class VentanaGPS(Screen):
 
 		self.ids.mapview.center_on(self.latitudActual, self.longitudActual) #mapa centrado en ubicacion actual
 		self.ids.mapview.zoom=5
-
+		"""
 		mapmarkerpopupUbicacionActual=MapMarkerPopup(lat= self.latitudActual,lon= self.longitudActual, popup_size= (120,70))
 		bubbleUbicacionActual=Bubble()
 		labelUbicacionActual= Label(text= "[b]Ubicaion actual![/b]", markup= True, halign= "center")
 		bubbleUbicacionActual.add_widget(labelUbicacionActual)
 		mapmarkerpopupUbicacionActual.add_widget(bubbleUbicacionActual) #creo un marcador con etique para saber la ubicacion actual, es de color rojo
-
+		"""
 
 		#self.ids.mapview.center_on(4.795100942698568, -75.6890602859938) #Me centra en la utp.
 		if len(self.listaMarker)>0:
@@ -118,7 +118,7 @@ class VentanaGPS(Screen):
 		    self.listaMarker=[] #La reseteo para poder meter los mapMarker de los vehiculos actualizados.
 
 		#Se hace la consulta a la BD para obtener las lat y lon de los vehiculos-----------------------BD
-		self.listaMarker.append(mapmarkerpopupUbicacionActual)
+		#self.listaMarker.append(mapmarkerpopupUbicacionActual)
 
 		#hacer consulta base de datos
 		pos = UbicacionVehiculo.obtenerData(UbicacionVehiculo)
@@ -161,7 +161,7 @@ class VentanaGPS(Screen):
 		self.ids.mapview.center_on(self.latitudActual, self.longitudActual) #mapa centrado en ubicacion actual
 		self.ids.mapview.zoom=17
 
-		mapmarkerpopupUbicacionActual=MapMarkerPopup(lat= self.latitudActual,lon= self.longitudActual, popup_size= (120,70))
+		mapmarkerpopupUbicacionActual=MapMarkerPopup(lat= self.latitudActual,lon= self.longitudActual, popup_size= (120,70), color=(0,0,0,1))
 		bubbleUbicacionActual=Bubble()
 		labelUbicacionActual= Label(text= "[b]Ubicaion actual![/b]", markup= True, halign= "center")
 		bubbleUbicacionActual.add_widget(labelUbicacionActual)

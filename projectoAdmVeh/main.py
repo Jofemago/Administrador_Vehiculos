@@ -6,6 +6,7 @@ import vistas.administradorVentanas
 import vistas.ventanaAdministradorVehiculos
 import vistas.tableroPrincipal
 import vistas.ventanaGPS
+import vistas.alarma
 #import kivy.garden.mapview
 #to create the database
 from db.creator import Creator

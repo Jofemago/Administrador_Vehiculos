@@ -5,6 +5,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 #from pygame import mixer
+from db.creator import Creator
 
 class Alarma(Screen):
 	#l=[]
@@ -17,9 +18,12 @@ class Alarma(Screen):
 		#mixer.init()
 		#mixer.music.load('helio.mp3')
 		#mixer.music.play()
+		c = Creator()
+		filejson = c.makeConfigJSON()
+		nombreVehiculo = filejson["nameVehicule"]
 		contenedorBtn = GridLayout(cols=3, size_hint_y= None, height='44sp')
 		contenedorGeneral=GridLayout(cols=1)
-		informacionAlarma = Label(text="Usted ha programado la alarma: "+nombreAlarma+" para "+recargaOmantenimiento+" del vehiculo: no se")
+		informacionAlarma = Label(text="Usted ha programado la alarma: "+nombreAlarma+" para "+recargaOmantenimiento+" del vehiculo: " + nombreVehiculo)
 		btnAceptar = Button(text="OK", on_press=lambda alarm:self.regresaraPestanaAnterior(ventanaActual))
 
 		contenedorBtn.add_widget(BoxLayout())
